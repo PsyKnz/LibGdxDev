@@ -12,35 +12,23 @@ public class LibGDXGame extends Game {
 	// Core AssetManager for the game.
 	public static AssetManager assets;
 	
-	// Tge games PixmapAtlas, allows for dynamic texture editing.
-	public static PixmapAtlas pixAtlas;
-	
 	// The aspect ratio which should be used to draw the game screen.
-	public float aspectRatio = 16 / 9;
+	public static final float aspectRatio = 16 / 9;
 	
 	// Width and height of the game screen in in-game units.
-	public int width = 800;
-	public int height = 450;
+	public static final int width = 800;
+	public static final int height = 450;
 	
 	@Override
 	public void create() {
 		assets = new AssetManager();
-		pixAtlas = new PixmapAtlas(1, 1);
 		
 		setScreen(new SplashScreen(this));
 	}
 	
 	@Override
-	public void resume() {
-		super.resume();
-		// Reloads the PixmapAtlas in case it was disposed of as a result of context loss.
-		pixAtlas.reloadTexture();
-	}
-	
-	@Override
 	public void dispose() {
 		super.dispose();
-		pixAtlas.dispose();
 		assets.dispose();
 	}
 }

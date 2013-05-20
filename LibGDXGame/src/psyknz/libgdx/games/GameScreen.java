@@ -20,10 +20,6 @@ public class GameScreen implements Screen {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
-	// The current width and height in pixels of the screen.
-	public int width;
-	public int height;
-	
 	public GameScreen(LibGDXGame game) {
 		this.game = game;
 	}
@@ -62,8 +58,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		// Stores the screen width and height then adjusts the camera accordingly.
-		this.width = width;
-		this.height = height;
 		camera.setToOrtho(false, game.width, game.height);
 	}
 	

@@ -2,28 +2,21 @@ package psyknz.libgdx.games;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class GameButton implements GameElement {
+public class ButtonElement implements GameElement {
 	
 	// Reference to the listener this button reports to and the id the object passes on and draws onto itself.
-	private ElementListener parent;
-	private CharSequence id;
-	public Rectangle bounds;
+	private ElementListener listener;
+	private TextElement label;
+	private Rectangle bounds;
 	
 	// Texture regions for different button states.
 	private TextureRegion activeTex;
 	private TextureRegion inactiveTex;
 	private TextureRegion selectedTex;
-	
-	// Button font information.
-	private BitmapFont font;
-	private float scale;
-	private Color textColor;
-	private BitmapFont.TextBounds textBounds;
 	
 	// Status variables, track the current state of the button.
 	private boolean selected = false;
@@ -32,18 +25,13 @@ public class GameButton implements GameElement {
 	/* When a button is created it requires a unique identifier, a position, a reference
 	 * to the object listening for its state to change and a reference to the ButtonPrefs object
 	 * which stores the settings which should be shared across the buttons being created. */
-	public GameButton(String id, int x, int y, ButtonPrefs prefs, ElementListener parent) {
-		this.parent = parent;
-		this.id = id;
-		
-		bounds = new Rectangle(x, y, prefs.width, prefs.height);
+	public ButtonElement(String label, int x, int y, ButtonPrefs prefs, ElementListener listener) {
+		this.listener = listener;
+		this.label = new TextElement(label, prefs.font, x, y, TextElement.CENTER, TextElement.CENTER);
+		bounds = new Rectangle(x - prefs.width / 2, y - prefs.height / 2, prefs.width, prefs.height);
 		activeTex = prefs.activeTex;
 		inactiveTex = prefs.inactiveTex;
 		selectedTex = prefs.selectedTex;
-		font = prefs.font;
-		scale = font.getScaleX();
-		textColor = font.getColor();
-		textBounds = font.getBounds(id);
 	}
 	
 	/* The update method polls the Gdx input device for whether the screen is being touched. If it
@@ -52,42 +40,35 @@ public class GameButton implements GameElement {
 	 * selected it will inform the listener that it has now been touched. */
 	public void update(float delta) {
 		if(Gdx.input.isTouched()) {
-			if(bounds.contains(Gdx.input.getX(), Gdx.input.getY())) {
+			if(bounds.contains(Gdx.input.getX() * LibGDXGame.width / Gdx.graphics.getWidth(),
+			                   Gdx.input.getY() * LibGDXGame.height / Gdx.graphics.getHeight())) {
 				selected = true;
 			}
 			else {
 				selected = false;
 			}
 		}
-		else if(selected) parent.action(id.toString());
+		else if(selected) listener.action(label.getText());
 	}
 	
 	// Draws the button. The texture used depends on the current state of the button.
 	public void draw(SpriteBatch batch) {
         if(active) {
 			if(selected) {
-				batch.draw(selectedTex, bounds.x - bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height);
-				font.setScale(scale);
-				font.setColor(textColor);
-				font.draw(batch, id, bounds.x - textBounds.width / 2, bounds.y + textBounds.height / 2);
+				batch.draw(selectedTex, bounds.x, bounds.y, bounds.width, bounds.height);
 			}
 			else {
-				batch.draw(activeTex, bounds.x - bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height);
-				font.setScale(scale);
-				font.setColor(textColor);
-				font.draw(batch, id, bounds.x - textBounds.width / 2, bounds.y + textBounds.height / 2);
+				batch.draw(activeTex, bounds.x, bounds.y, bounds.width, bounds.height);
 			}
 		}
 		else {
-			batch.draw(inactiveTex, bounds.x - bounds.width / 2, bounds.y + bounds.height / 2, bounds.width, bounds.height);
-			font.setScale(scale);
-			font.setColor(textColor);
-			font.draw(batch, id, bounds.x - textBounds.width / 2, bounds.y + textBounds.height / 2);
+			batch.draw(inactiveTex, bounds.x, bounds.y, bounds.width, bounds.height);
 		}
+		label.draw(batch);
 	}
 	
 	// Helper object, stores shared preferences for all button objects.
-	public class ButtonPrefs {		
+	public static class ButtonPrefs {		
 		/* All preference variables are intended for direct manipulation, however the effects
 		 * of that manipulation will only be visible to buttons created after the changes. 
 		 * The values passed in as texture reference variables are indexed values for some form of
