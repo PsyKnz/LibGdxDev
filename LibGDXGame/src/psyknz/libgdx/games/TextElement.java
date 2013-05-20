@@ -3,7 +3,7 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class TextElement implements GameElement {
+public class TextElement extends GameElement {
     
 	// Constants for aligning the text.
 	public static final int LEFT = 0;

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class ButtonElement implements GameElement {
+public class ButtonElement extends GameElement {
 	
 	// Reference to the listener this button reports to and the id the object passes on and draws onto itself.
 	private ElementListener listener;

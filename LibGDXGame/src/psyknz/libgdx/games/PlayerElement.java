@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class PlayerElement implements GameElement {
+public class PlayerElement extends GameElement {
     
 	public final int BODY_SIZE = 32;
 	public final int HEAD_SIZE = 40;

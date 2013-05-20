@@ -2,11 +2,10 @@ package psyknz.libgdx.games;
 
 import java.util.ArrayList;
 
-/* A GameElementArray provides a means of collecting together GameElement objects
- * that interacts directly with the structure of a GameScreen objects render function.
- * It allows for objects to be inserted into the array based on the order of rendering.
- * Further it provides a means of generating unique identifiers for GameElements
- * which can then be used to find those objects, or groups of related objects. */
+/* A GameElementArray provides a means of collecting together GameElement objects that interacts directly with the structure of a
+ * GameScreen objects render function. It allows for objects to be inserted into the array based on the order of rendering. Further it
+ * provides a means of generating unique identifiers for GameElements which can then be used to find those objects, or groups of related
+ * objects. */
 public class GameElementArray {
     
 	private ArrayList<GameElement> elements;
@@ -15,11 +14,9 @@ public class GameElementArray {
 		elements = new ArrayList<GameElement>();
 	}
 	
-	/* Adds the given GameElement to the array and sets its id. A sequential number
-	 * is added to the end of the id to make it unique. The unique id is then returned 
-	 * so that it can be used to find the GameElement object later on. The GameElement
-	 * is placed at the specified depth of the array and after any other GameElements
-	 * at the same depth. */
+	/* Adds the given GameElement to the array and sets its id. A sequential number is added to the end of the id to make it unique. The
+	 * unique id is then returned so that it can be used to find the GameElement object later on. The GameElement is placed at the
+	 * specified depth of the array and after any other GameElements at the same depth. */
 	public String add(GameElement element, String id, float depth) {
 		int count = 0;
 		for(int i = 0; i < elements.size(); i++) {

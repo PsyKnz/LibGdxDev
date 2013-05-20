@@ -1,6 +1,5 @@
 package psyknz.libgdx.games;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -45,10 +44,10 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		
 		ButtonElement.ButtonPrefs prefs = new ButtonElement.ButtonPrefs(100, 50, activeTex, inactiveTex, selectedTex, font);
 		font.setScale(2.0f);
-		elements.add(new ButtonElement("Play", game.width / 2, game.height / 2, prefs, this));
+		elements.add(new ButtonElement("Play", LibGDXGame.width / 2, LibGDXGame.height / 2, prefs, this));
 		
 		font.setScale(1.0f);
-		elements.add(new TextElement("Menu Screen", font, 0, game.height));
+		elements.add(new TextElement("Menu Screen", font, 0, LibGDXGame.height));
 	}
 	
 	@Override
@@ -62,7 +61,7 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		game.setScreen(new PlayScreen(game));
 	}
 	
-	private class MenuScreenElement implements GameElement {
+	private class MenuScreenElement extends GameElement {
 		
 		public MenuScreenElement() {
 			
@@ -73,7 +72,7 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		}
 		
 		public void draw(SpriteBatch batch) {
-			batch.draw(background, 0, 0, game.width, game.height);
+			batch.draw(background, 0, 0, LibGDXGame.width, LibGDXGame.height);
 		}
 	}
 }

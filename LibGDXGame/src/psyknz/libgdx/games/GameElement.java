@@ -2,7 +2,7 @@ package psyknz.libgdx.games;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public interface GameElement {
+public abstract class GameElement {
 	
 	/* Identifier for the GameElement. Allows for intelligent grouping of GameElements
 	 * using string concatenation and contains functions. */
@@ -13,8 +13,8 @@ public interface GameElement {
 	public float depth;
 	
 	// Core game logic for the GameElement.
-	public void update(float delta);
+	public abstract void update(float delta);
 	
 	// Draws all parts of the GameElement to the screen using that screens SptiteBatch.
-	public void draw(SpriteBatch batch);
+	public abstract void draw(SpriteBatch batch);
 }

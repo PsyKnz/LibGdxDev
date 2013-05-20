@@ -24,12 +24,12 @@ public class SplashScreen extends GameScreen {
 		
 		font.setScale(2.0f);
 		BitmapFont.TextBounds bounds = font.getBounds("Company Logo");
-		elements.add(new TextElement("Company Logo", font, game.width / 2 - (int) (bounds.width / 2), game.height / 2 + (int) (bounds.height / 2)));
+		elements.add(new TextElement("Company Logo", font, LibGDXGame.width / 2 - (int) (bounds.width / 2), LibGDXGame.height / 2 + (int) (bounds.height / 2)));
 		
 		elements.add(new SplashScreenElement());
 		
 		font.setScale(1.0f);
-		elements.add(new TextElement("Splash Screen", font, 0, game.height));
+		elements.add(new TextElement("Splash Screen", font, 0, LibGDXGame.height));
 		
 	}
 	
@@ -40,14 +40,14 @@ public class SplashScreen extends GameScreen {
 		font.dispose();
 	}
 	
-	private class SplashScreenElement implements GameElement {
+	private class SplashScreenElement extends GameElement {
 		
 		private float[] fadeTimer = {1.0f, 3.0f, 1.0f};
 		private Color fadeColor = new Color(0, 0, 0, 1);
 		
 		public SplashScreenElement() {
 			fadePix = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
-			fadePix.setBlending(Pixmap.Blending.None);
+			Pixmap.setBlending(Pixmap.Blending.None);
 			fadePix.setColor(fadeColor);
 			fadePix.drawPixel(0, 0);
 			fadeTex = new Texture(fadePix);
@@ -86,7 +86,7 @@ public class SplashScreen extends GameScreen {
 		}
 		
 		public void draw(SpriteBatch batch) {
-			batch.draw(fadeTex, 0, 0, game.width, game.height);
+			batch.draw(fadeTex, 0, 0, LibGDXGame.width, LibGDXGame.height);
 		}
 	}
 }
