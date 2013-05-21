@@ -26,6 +26,8 @@ public class PlayerElement extends GameElement {
 	}
 	
 	public void draw(SpriteBatch batch) {
-		
+		for(int i = body.size(); i >= 0; i--) {
+			batch.draw(body.get(i).tex, body.get(i).x, body.get(i).y);
+		}
 	}
 }

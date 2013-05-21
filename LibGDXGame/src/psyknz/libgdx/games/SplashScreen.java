@@ -17,6 +17,7 @@ public class SplashScreen extends GameScreen {
 		super(game);
 	}
 
+	@Override
 	public void show() {
 		super.show();
 

@@ -19,6 +19,12 @@ public class GameElementArray {
 	 * specified depth of the array and after any other GameElements at the same depth. Additional constructors are available which do
 	 * not require the tag be set or the depth, or ether. */
 	public String add(GameElement element, String tag, float depth) {
+		if(elements.size() == 0) {
+			element.tag = tag + "-" + 0;
+			elements.add(element);
+			return element.tag;
+		}
+		
 		int count = 0;
 		for(int i = 0; i < elements.size(); i++) {
 			if(elements.get(i).tag.contains(tag)) {
@@ -29,7 +35,7 @@ public class GameElementArray {
 		
 		element.depth = depth;
 		count = 0;
-		while(element.depth < elements.get(count).depth) {
+		while(count < elements.size() && element.depth <= elements.get(count).depth) {
 			count++;
 		}
 		elements.add(count, element);
