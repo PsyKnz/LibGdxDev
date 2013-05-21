@@ -1,7 +1,5 @@
 package psyknz.libgdx.games;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -13,7 +11,7 @@ public class GameScreen implements Screen {
 	public LibGDXGame game;
 	
 	// Collection of all game elements present in the current screen..
-	protected ArrayList<GameElement> elements;
+	protected GameElementArray elements;
 	
 	// Member objects used to draw the screen.
 	private OrthographicCamera camera;
@@ -25,7 +23,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void show() {
-		elements = new ArrayList<GameElement>();
+		elements = new GameElementArray();
 		
 		camera = new OrthographicCamera();
 		batch = new SpriteBatch();

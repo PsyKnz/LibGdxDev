@@ -16,15 +16,16 @@ public class GameElementArray {
 	
 	/* Adds the given GameElement to the array and sets its id. A sequential number is added to the end of the id to make it unique. The
 	 * unique id is then returned so that it can be used to find the GameElement object later on. The GameElement is placed at the
-	 * specified depth of the array and after any other GameElements at the same depth. */
-	public String add(GameElement element, String id, float depth) {
+	 * specified depth of the array and after any other GameElements at the same depth. Additional constructors are available which do
+	 * not require the tag be set or the depth, or ether. */
+	public String add(GameElement element, String tag, float depth) {
 		int count = 0;
 		for(int i = 0; i < elements.size(); i++) {
-			if(elements.get(i).id.contains(id)) {
+			if(elements.get(i).tag.contains(tag)) {
 				count++;
 			}
 		}
-		element.id = id + count;
+		element.tag = tag + "-" + count;
 		
 		element.depth = depth;
 		count = 0;
@@ -32,13 +33,25 @@ public class GameElementArray {
 			count++;
 		}
 		elements.add(count, element);
-		return element.id;
+		return element.tag;
+	}
+	
+	public String add(GameElement element) {
+		return this.add(element, "NoTag", 0);
+	}
+	
+	public String add(GameElement element, float depth) {
+		return this.add(element, "NoTag", depth);
+	}
+	
+	public String add(GameElement element, String tag) {
+		return this.add(element, tag, 0);
 	}
 	
 	// Returns the first GameElement which contains the id in question inside of its id. Returns null if there is no match.
-	public GameElement get(String id) {
+	public GameElement get(String tag) {
 		for(int i = 0; i < elements.size(); i++) {
-			if(elements.get(i).id.contains(id)) {
+			if(elements.get(i).tag.contains(tag)) {
 				return elements.get(i);
 			}
 		}
@@ -54,13 +67,23 @@ public class GameElementArray {
 	}
 	
 	// Returns the position of the first GameElement which contains the id in question inside of its id. Returns -1 if there is no match.
-	public int getIndex(String id) {
+	public int getIndex(String tag) {
 		for(int i = 0; i < elements.size(); i++) {
-			if(elements.get(i).id.contains(id)) {
+			if(elements.get(i).tag.contains(tag)) {
 				return i;
 			}
 		}
 		return -1;
+	}
+	
+	// NOT IMPLEMENTED. Returns an ArrayList containing all GameElements in this list which contain the desired tags.
+	public ArrayList<GameElement> filter(String[] tag) {
+		return null;
+	}
+	
+	// Returns the number of elements present in the ArrayList.
+	public int size() {
+		return elements.size();
 	}
 	
 }
