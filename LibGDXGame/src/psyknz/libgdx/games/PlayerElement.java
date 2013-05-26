@@ -14,11 +14,11 @@ public class PlayerElement extends GameElement {
 	private TextureRegion[][] sprites;
 	
 	public PlayerElement(TextureRegion tex, int x, int y) {
-		sprites = tex.split(tex.getRegionHeight(), tex.getRegionHeight());
+		sprites[0][0] = tex;
 		body.add(new PlayerBody(sprites[0][0], x, y));
-		body.add(new PlayerBody(sprites[1][0], x, y));
-		body.add(new PlayerBody(sprites[1][0], x, y));
-		body.add(new PlayerBody(sprites[1][0], x, y));
+		body.add(new PlayerBody(sprites[0][0], x, y));
+		body.add(new PlayerBody(sprites[0][0], x, y));
+		body.add(new PlayerBody(sprites[0][0], x, y));
 	}
 	
 	public void update(float delta) {
@@ -26,7 +26,7 @@ public class PlayerElement extends GameElement {
 	}
 	
 	public void draw(SpriteBatch batch) {
-		for(int i = body.size(); i >= 0; i--) {
+		for(int i = body.size() - 1; i >= 0; i--) {
 			batch.draw(body.get(i).tex, body.get(i).x, body.get(i).y);
 		}
 	}

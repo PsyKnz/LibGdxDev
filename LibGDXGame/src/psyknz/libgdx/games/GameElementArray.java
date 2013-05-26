@@ -19,7 +19,7 @@ public class GameElementArray {
 	 * specified depth of the array and after any other GameElements at the same depth. Additional constructors are available which do
 	 * not require the tag be set or the depth, or ether. */
 	public String add(GameElement element, String tag, float depth) {
-		if(elements.size() == 0) {
+		if(elements.isEmpty()) {
 			element.tag = tag + "-" + 0;
 			elements.add(element);
 			return element.tag;
