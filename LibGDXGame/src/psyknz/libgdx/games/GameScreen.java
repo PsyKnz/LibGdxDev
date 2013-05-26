@@ -10,7 +10,7 @@ public class GameScreen implements Screen {
 	// Reference to the core game object.
 	public LibGDXGame game;
 	
-	// Collection of all game elements present in the current screen..
+	// Collection of all game elements present in the current screen.
 	protected GameElementArray elements;
 	
 	// Member objects used to draw the screen.
@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void hide() {
-		this.dispose();
+		//this.dispose();
 	}
 	
 	@Override

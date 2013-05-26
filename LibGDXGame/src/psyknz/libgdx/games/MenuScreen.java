@@ -52,11 +52,10 @@ public class MenuScreen extends GameScreen implements ElementListener {
 	
 	@Override
 	public void dispose() {
-		this.dispose();
+		super.dispose();
 		tex.dispose();
 	}
 	
-	@Override
 	public void action(String id) {
 		game.setScreen(new PlayScreen(game));
 	}

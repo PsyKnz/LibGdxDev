@@ -1,33 +1,40 @@
 package psyknz.libgdx.games;
 
-import java.util.ArrayList;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class PlayerElement extends GameElement {
-    
-	public final int BODY_SIZE = 32;
-	public final int HEAD_SIZE = 40;
+public class PlayerElement extends GameElement{
 	
-	private ArrayList<PlayerBody> body;
-	private TextureRegion[][] sprites;
+	// Reference to the SnakeElement which the player can control.
+	private SnakeElement player;
 	
-	public PlayerElement(TextureRegion tex, int x, int y) {
-		sprites[0][0] = tex;
-		body.add(new PlayerBody(sprites[0][0], x, y));
-		body.add(new PlayerBody(sprites[0][0], x, y));
-		body.add(new PlayerBody(sprites[0][0], x, y));
-		body.add(new PlayerBody(sprites[0][0], x, y));
+	private boolean touched = false;
+	
+	public PlayerElement(Sprite sprite) {
+		player = new SnakeElement(sprite, LibGDXGame.width / 2, LibGDXGame.height / 2, 3, 32, 40, new Color(0, 0, 1, 1));
 	}
 	
+	// Tests for user input and moves the players SnakeElement appropriately. Needs a better implementation.
 	public void update(float delta) {
+		if(Gdx.input.isTouched()) {
+			if(player.getBounds(0).contains(Gdx.input.getX(), LibGDXGame.height - Gdx.input.getY())) {
+				touched = true;
+			}
+			else if(touched){
+				player.move(Gdx.input.getX(), LibGDXGame.height - Gdx.input.getY());
+			}
+		}
+		else {
+			touched = false;
+		}
 		
+		player.update(delta);
 	}
 	
 	public void draw(SpriteBatch batch) {
-		for(int i = body.size() - 1; i >= 0; i--) {
-			batch.draw(body.get(i).tex, body.get(i).x, body.get(i).y);
-		}
+		player.draw(batch);
 	}
+
 }
