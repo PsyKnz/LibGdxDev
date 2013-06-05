@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
+	// Constraints used for determining how the cameras focus should be stretched to fit the screen.
+	private static final int CONSTRAIN_WIDTH = 0;
+	private static final int CONSTRAIN_HEIGHT = 1;
+	private static final int CONSTRAIN_MAX = 2;
+	private static final int CONSTRAIN_MIN = 3;
+	
 	// Reference to the core game object.
 	public LibGDXGame game;
 	
@@ -52,10 +58,45 @@ public class GameScreen implements Screen {
 		batch.end();
 	}
 	
+	// Extensions of this class should only override this method and should call the overloaded form with the desired resizing constraint.
 	@Override
 	public void resize(int width, int height) {
-		// Stores the screen width and height then adjusts the camera accordingly.
-		camera.setToOrtho(false, LibGDXGame.width, LibGDXGame.height);
+		resize(width, height, CONSTRAIN_WIDTH);
+	}
+	
+	// Overloaded resize function which allows for the camera to be variably set based on which dimension is most necessary to have visible.
+	public void resize(int width, int height, int constrain) {
+		switch(constrain) {
+			// Sets the camera so that the entire internal game width is visible.
+			case CONSTRAIN_WIDTH:
+			    LibGDXGame.visibleWidth = LibGDXGame.width;
+			    LibGDXGame.visibleHeight = LibGDXGame.width * height / width;
+				camera.setToOrtho(false, LibGDXGame.visibleWidth, LibGDXGame.visibleHeight);
+				camera.position.y -= (LibGDXGame.visibleHeight - LibGDXGame.height) / 2;
+			    break;
+				
+			// Sets the camera so that the entire internal game height is visible.
+			case CONSTRAIN_HEIGHT:
+			    LibGDXGame.visibleHeight = LibGDXGame.height;
+			    LibGDXGame.visibleWidth = LibGDXGame.height * width / height;
+				camera.setToOrtho(false, LibGDXGame.visibleWidth, LibGDXGame.visibleHeight);
+				camera.position.x -= (LibGDXGame.visibleWidth - LibGDXGame.width) / 2;
+			    break;
+				
+			// Sets the camera so that the entire internal game area is visible.
+			case CONSTRAIN_MAX:
+			    if(LibGDXGame.width / LibGDXGame.height >= width / height)
+					resize(width, height, CONSTRAIN_WIDTH);
+				else resize(width, height, CONSTRAIN_HEIGHT);
+			    break;
+			
+			// Sets the camera so that the viewport is entirely filled.
+			case CONSTRAIN_MIN:
+			    if(LibGDXGame.width / LibGDXGame.height >= width / height)
+					resize(width, height, CONSTRAIN_HEIGHT);
+				else resize(width, height, CONSTRAIN_WIDTH);
+			    break;
+		}
 	}
 	
 	@Override
@@ -68,7 +109,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void hide() {
-		//this.dispose();
+		this.dispose();
 	}
 	
 	@Override

@@ -40,8 +40,8 @@ public class ButtonElement extends GameElement {
 	 * selected it will inform the listener that it has now been touched. */
 	public void update(float delta) {
 		if(Gdx.input.isTouched()) {
-			if(bounds.contains(Gdx.input.getX() * LibGDXGame.width / Gdx.graphics.getWidth(),
-			                   Gdx.input.getY() * LibGDXGame.height / Gdx.graphics.getHeight())) {
+			if(bounds.contains(Gdx.input.getX() * LibGDXGame.visibleWidth / Gdx.graphics.getWidth(),
+			                   LibGDXGame.visibleHeight - Gdx.input.getY() * LibGDXGame.visibleHeight / Gdx.graphics.getHeight())) {
 				selected = true;
 			}
 			else {

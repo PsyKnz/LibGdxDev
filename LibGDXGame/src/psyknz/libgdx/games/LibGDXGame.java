@@ -12,17 +12,19 @@ public class LibGDXGame extends Game {
 	// Core AssetManager for the game.
 	public static AssetManager assets;
 	
-	// The aspect ratio which should be used to draw the game screen.
-	public static final float aspectRatio = 16 / 9;
-	
 	// Width and height of the game screen in in-game units.
 	public static final int width = 800;
 	public static final int height = 450;
+	
+	// The width and height of the visible game area in in-game units.
+	public static int visibleWidth;
+	public static int visibleHeight;
 	
 	@Override
 	public void create() {
 		assets = new AssetManager();
 		
+		// Loads the first screen to use in the game.
 		setScreen(new SplashScreen(this));
 	}
 	

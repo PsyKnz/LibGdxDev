@@ -10,7 +10,6 @@ public class PlayScreen extends GameScreen {
 	public BitmapFont font;
 	public Pixmap pix;
 	public Texture tex;
-	public Sprite sprite;
 	
 	public PlayScreen(LibGDXGame game) {
 		super(game);
@@ -20,20 +19,20 @@ public class PlayScreen extends GameScreen {
 	public void show() {
 		super.show();
 		
-		pix = new Pixmap(32, 32, Pixmap.Format.RGBA8888);
-		Pixmap.setBlending(Pixmap.Blending.None);
+		pix = new Pixmap(64, 32, Pixmap.Format.RGBA8888);
 		pix.setColor(1, 1, 1, 1);
 		pix.fillCircle(16,  16,  15);
-		pix.setColor(0, 0, 0, 0);
-		pix.fillCircle(16,  16,  12);
+		pix.fillCircle(48,  16,  12);
 		
 		tex = new Texture(pix);
-		sprite = new Sprite(tex, 0, 0, 32, 32);
+		Sprite bigCircle = new Sprite(tex, 0, 0, 32, 32);
+		Sprite smallCircle = new Sprite(tex, 32, 0, 32, 32);
+		
 		
 		font = new BitmapFont();
 		font.setColor(1, 1, 1, 1);
 		
-		elements.add(new PlayerElement(sprite));
+		elements.add(new PlayerElement(bigCircle, smallCircle));
 		
 		font.setScale(1.0f);
 		elements.add(new TextElement("Play Screen", font, 0, LibGDXGame.height));
