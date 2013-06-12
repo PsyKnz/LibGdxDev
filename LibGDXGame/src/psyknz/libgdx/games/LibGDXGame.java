@@ -8,17 +8,12 @@ import com.badlogic.gdx.assets.AssetManager;
  * the games AssetManager. To actually run the game you call this objects setScreen() method and set it
  * to an instance of a GameScreen object which requires this be passed as an argument. */
 public class LibGDXGame extends Game {
+	// Width and height of the game screen in in-game units.
+	public final int GAME_WIDTH = 800;
+	public final int GAME_HEIGHT = 450;
 	
 	// Core AssetManager for the game.
 	public static AssetManager assets;
-	
-	// Width and height of the game screen in in-game units.
-	public static final int width = 800;
-	public static final int height = 450;
-	
-	// The width and height of the visible game area in in-game units.
-	public static int visibleWidth;
-	public static int visibleHeight;
 	
 	@Override
 	public void create() {

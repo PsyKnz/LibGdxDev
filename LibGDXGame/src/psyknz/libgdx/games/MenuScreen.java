@@ -11,6 +11,8 @@ public class MenuScreen extends GameScreen implements ElementListener {
 	private Texture tex;
 	private TextureRegion background;
 	private BitmapFont font;
+	
+	public CharSequence str;
 
 	public MenuScreen(LibGDXGame game) {
 		super(game);
@@ -44,10 +46,10 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		
 		ButtonElement.ButtonPrefs prefs = new ButtonElement.ButtonPrefs(100, 50, activeTex, inactiveTex, selectedTex, font);
 		font.setScale(2.0f);
-		elements.add(new ButtonElement("Play", LibGDXGame.width / 2, LibGDXGame.height / 2, prefs, this));
+		elements.add(new ButtonElement("Play", game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, prefs, this, this));
 		
 		font.setScale(1.0f);
-		elements.add(new TextElement("Menu Screen", font, 0, LibGDXGame.height));
+		elements.add(new TextElement("Menu Screen", font, 0, game.GAME_HEIGHT));
 	}
 	
 	@Override
@@ -71,7 +73,15 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		}
 		
 		public void draw(SpriteBatch batch) {
-			batch.draw(background, 0, 0, LibGDXGame.width, LibGDXGame.height);
+			batch.draw(background, 0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
+			
+			str = "x: " + touchX() + " ,y: " + touchY();
+			font.draw(batch, str, leftOffset, 200);
+			
+			str = "visibleWidth: " + visibleWidth + ", visibleHeight: " + visibleHeight;
+			font.draw(batch, str, leftOffset, 50);
+			str = "leftOffset: " + leftOffset + ", bottomOffset: " + bottomOffset;
+			font.draw(batch, str, leftOffset, 80);
 		}
 	}
 }

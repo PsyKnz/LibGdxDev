@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class PlayerElement extends GameElement{
+    
+	private GameScreen screen;
+	
 	// Reference to the SnakeElement which the player can control and its head.
 	private SnakeElement player;
 	private Rectangle head;
@@ -14,24 +17,24 @@ public class PlayerElement extends GameElement{
 	// Whether or not the players SnakeElement head has been touched.
 	private boolean touched = false;
 	
-	public PlayerElement(Sprite outline, Sprite inside) {
-		player = new SnakeElement(outline, inside, LibGDXGame.width / 2, LibGDXGame.height / 2, 5, 32, 40, new Color(0, 0, 1, 1));
+	public PlayerElement(GameScreen screen, Sprite circle, int x, int y) {
+		this.screen = screen;
+		
+		player = new SnakeElement(screen, circle, new Color(0, 0, 1, 1), x, y, 32, 5);
 		head = player.getBounds(0);
 	}
 	
 	// Tests for user input and moves the players SnakeElement appropriately. Needs a better implementation.
 	public void update(float delta) {
 		// If the screen is touched checks to see if the players finger is above the snakes head, If it is the snake is set to touched.
-		if(Gdx.input.isTouched()) {
-			if(head.contains(Gdx.input.getX() * LibGDXGame.visibleWidth / Gdx.graphics.getWidth(), 
-			                 LibGDXGame.visibleHeight - Gdx.input.getY() * LibGDXGame.visibleHeight / Gdx.graphics.getHeight())) {
+		if(screen.isTouched()) {
+			if(head.contains(screen.touchX(), screen.touchY())) {
 				touched = true;
 			}
 			
 			// If the player is set to touched then the head of the SnakeElement follows the finger around the screen.
 			if(touched){
-				player.move(Gdx.input.getX() * LibGDXGame.visibleWidth / Gdx.graphics.getWidth(), 
-				            LibGDXGame.visibleHeight - Gdx.input.getY() * LibGDXGame.visibleHeight / Gdx.graphics.getHeight());
+				player.move(screen.touchX(), screen.touchY());
 			}
 		}
 		else {

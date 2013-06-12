@@ -1,12 +1,13 @@
 package psyknz.libgdx.games;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class ButtonElement extends GameElement {
+	
+	private GameScreen screen;
 	
 	// Reference to the listener this button reports to and the id the object passes on and draws onto itself.
 	private ElementListener listener;
@@ -25,13 +26,15 @@ public class ButtonElement extends GameElement {
 	/* When a button is created it requires a unique identifier, a position, a reference
 	 * to the object listening for its state to change and a reference to the ButtonPrefs object
 	 * which stores the settings which should be shared across the buttons being created. */
-	public ButtonElement(String label, int x, int y, ButtonPrefs prefs, ElementListener listener) {
+	public ButtonElement(String label, int x, int y, ButtonPrefs prefs, ElementListener listener, GameScreen screen) {
 		this.listener = listener;
 		this.label = new TextElement(label, prefs.font, x, y, TextElement.CENTER, TextElement.CENTER);
 		bounds = new Rectangle(x - prefs.width / 2, y - prefs.height / 2, prefs.width, prefs.height);
 		activeTex = prefs.activeTex;
 		inactiveTex = prefs.inactiveTex;
 		selectedTex = prefs.selectedTex;
+		
+		this.screen = screen;
 	}
 	
 	/* The update method polls the Gdx input device for whether the screen is being touched. If it
@@ -39,9 +42,8 @@ public class ButtonElement extends GameElement {
 	 * is currently selected. As soon as the finger is lifted off of the screen, if the button was
 	 * selected it will inform the listener that it has now been touched. */
 	public void update(float delta) {
-		if(Gdx.input.isTouched()) {
-			if(bounds.contains(Gdx.input.getX() * LibGDXGame.visibleWidth / Gdx.graphics.getWidth(),
-			                   LibGDXGame.visibleHeight - Gdx.input.getY() * LibGDXGame.visibleHeight / Gdx.graphics.getHeight())) {
+		if(screen.isTouched()) {
+			if(bounds.contains(screen.touchX(), screen.touchY())) {
 				selected = true;
 			}
 			else {

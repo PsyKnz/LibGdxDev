@@ -8,21 +8,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
 
-public class SnakeElement extends GameElement {
-    
-	// Constants for presenting the SnakeBody parts.
-	public final int BODY_SIZE;
-	public final int HEAD_SIZE;
+public class SnakeElement extends ShapeElement {
 	
-	// The base sprite to use for presenting the SnakeBody parts.
-	private Sprite outline;
-	private Sprite inside;
-	
-	// The color of the snake.
-	private Color color;
-	
-	// Constant used to adjust the color of the snakes inside relative to its outline.
-	private final Color COLOR_MASK = new Color(0.5f, 0.5f, 0.5f, 1);
+	// How much bigger tge head should be relative to the body.
+	public static final float HEAD_SCALE = 1.2f;
 	
 	// List of the SnakeElements SnakeBody pieces.
 	private ArrayList<SnakeBody> body;
@@ -30,21 +19,13 @@ public class SnakeElement extends GameElement {
 	// Reference to the last piece of the snake, used for drawing and growing.
 	private SnakeBody tail;
 	
-	public SnakeElement(Sprite outline, Sprite inside, int x, int y, int length, int bodySize, int headSize, Color color) {
+	public SnakeElement(GameScreen screen, Sprite shape, Color color, int x, int y, int size, int length) {
+		super(screen, shape, color, x, y, size);
+		
 		body = new ArrayList<SnakeBody>();
 		
-		// Sets the sprites to use for the snakes outline and inside its body.
-		this.outline = outline;
-		this.inside = inside;
-		
-		// Sets the constants for the snake.
-		this.HEAD_SIZE = headSize;
-		this.BODY_SIZE = bodySize;
-		
-		this.color = color;
-		
 		// Creates the head of the snake then adds the given number of SnakeBody parts.
-		body.add(new SnakeBody(null, x, y, HEAD_SIZE));
+		body.add(new SnakeBody(null, x, y, (int) (bounds.getWidth() * HEAD_SCALE)));
 		tail = body.get(0);
 		for(int i = 0; i < length; i++) {
 			grow();
@@ -52,20 +33,20 @@ public class SnakeElement extends GameElement {
 	}
 	
 	public void update(float delta) {
+		// updates the position of all SnakeBody parts from the head to the tail.
 		for(int i = 0; i < body.size(); i++) {
 			body.get(i).update(delta);
 		}
+		
+		// sets moved for the last part of the tail to false since the part can't do it itself.
 		body.get(body.size() - 1).moved = false;
 	}
 	
 	public void draw(SpriteBatch batch) {
-		// Sets the color of the outline and inside of the snake.
-		outline.setColor(color);
-		inside.setColor(0, 1, 0, 1);
-		
 		// Draws the outline of the last piece of the snake (which wont draw itself).
-		outline.setBounds(tail.bounds.x, tail.bounds.y, tail.bounds.width, tail.bounds.height);
-		outline.draw(batch);
+		shape.setColor(color);
+		shape.setBounds(tail.bounds.x - OUTLINE_SIZE, tail.bounds.y - OUTLINE_SIZE, tail.bounds.width + OUTLINE_SIZE * 2, tail.bounds.height + OUTLINE_SIZE * 2);
+		shape.draw(batch);
 		
 		// Loops through the entire SnakeBody drawing each piece from last to first.
 		for(int i = body.size() - 1; i >= 0; i--) {
@@ -75,7 +56,7 @@ public class SnakeElement extends GameElement {
 	
 	// Causes the body of the snake to grow by 1 piece.
 	public void grow() {
-		body.add(new SnakeBody(tail, tail.getX(), tail.getY(), BODY_SIZE));
+		body.add(new SnakeBody(tail, tail.getX(), tail.getY(), (int) bounds.getWidth()));
 		tail = body.get(body.size() - 1);
 	}
 	
@@ -84,10 +65,13 @@ public class SnakeElement extends GameElement {
 		return body.get(index).bounds;
 	}
 	
-	// Moves the head of the SnakeElement to the given location. Its bounding box will be centered about the given co-ordinates.
+	// Overrides the move method so that it interacts with the SnakeElements in its body.
+	@Override
 	public void move(int x, int y) {
-		body.get(0).bounds.x = x - body.get(0).bounds.width / 2;
-		body.get(0).bounds.y = y - body.get(0).bounds.height / 2;
+		super.move(x, y);
+		
+		// Moves the head of the snake to the position of the SnakeElement.
+		body.get(0).bounds.set(bounds);
 		body.get(0).moved = true;
 	}
 	
@@ -104,7 +88,7 @@ public class SnakeElement extends GameElement {
 		public boolean moved = false;
 		
 		// Temporary variables used for movement calculation.
-		private float xDif, yDif, angle, xShift, yShift;
+		private float angle;
 		
 		public SnakeBody(SnakeBody parent, int x, int y, int size) {
             this.parent = parent;			
@@ -114,13 +98,14 @@ public class SnakeElement extends GameElement {
 		// Moves the SnakeBody part around the screen, following its parent part. The head should have its parent set to null.
 		public void update(float delta) {
 			if(parent != null && parent.moved) {
-				xDif = parent.bounds.x - bounds.x;
-				yDif = parent.bounds.y - bounds.y;
-				angle = MathUtils.atan2(yDif, xDif);
-			    xShift = MathUtils.cos(angle) * (parent.bounds.width / 2 + 1);
-				yShift = MathUtils.sin(angle) * (parent.bounds.width / 2 + 1);
-				bounds.x = parent.bounds.x - xShift;
-				bounds.y = parent.bounds.y - yShift;
+				// Finds the angle of the vector produced by the difference in position of this SnakeBody piece and its parent.
+				angle = MathUtils.atan2(parent.bounds.y - bounds.y, parent.bounds.x - bounds.x);
+				
+				// Finds the new co-ordinates for the snake body so that it is linked to its parent at its previous angle.
+				bounds.x = parent.bounds.x - MathUtils.cos(angle) * (parent.bounds.width / 2 + 1);
+				bounds.y = parent.bounds.y - MathUtils.sin(angle) * (parent.bounds.width / 2 + 1);
+				
+				// Declares the parent as having no longer moved and this as moved for the next piece of the snake.
 				parent.moved = false;
 				moved = true;
 			}
@@ -130,13 +115,15 @@ public class SnakeElement extends GameElement {
 		public void draw(SpriteBatch batch) {
 			// If the SnakeBody has a parent SnakeBody its outline is drawn.
 			if(parent != null) {
-				outline.setBounds(parent.bounds.x, parent.bounds.y, parent.bounds.width, parent.bounds.height);
-				outline.draw(batch);
+				shape.setColor(color);
+				shape.setBounds(parent.bounds.x - OUTLINE_SIZE, parent.bounds.y - OUTLINE_SIZE, parent.bounds.width + OUTLINE_SIZE * 2, parent.bounds.height + OUTLINE_SIZE + 2);
+				shape.draw(batch);
 			}
 			
 			// Draws the inside of the SnakeBody.
-			inside.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-			inside.draw(batch);
+			shape.setColor(color.r * screen.background.r, color.g * screen.background.g, color.b * screen.background.b, 1);
+			shape.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+			shape.draw(batch);
 		}
 		
 		// Returns the x co-ordinate for the centre point of the SnakeBody part.

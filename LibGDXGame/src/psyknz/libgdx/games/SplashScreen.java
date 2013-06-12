@@ -25,12 +25,12 @@ public class SplashScreen extends GameScreen {
 		
 		font.setScale(2.0f);
 		BitmapFont.TextBounds bounds = font.getBounds("Company Logo");
-		elements.add(new TextElement("Company Logo", font, LibGDXGame.width / 2 - (int) (bounds.width / 2), LibGDXGame.height / 2 + (int) (bounds.height / 2)));
+		elements.add(new TextElement("Company Logo", font, game.GAME_WIDTH / 2 - (int) (bounds.width / 2), game.GAME_HEIGHT / 2 + (int) (bounds.height / 2)));
 		
 		elements.add(new SplashScreenElement());
 		
 		font.setScale(1.0f);
-		elements.add(new TextElement("Splash Screen", font, 0, LibGDXGame.height));
+		elements.add(new TextElement("Splash Screen", font, 0, game.GAME_HEIGHT));
 		
 	}
 	
@@ -87,7 +87,7 @@ public class SplashScreen extends GameScreen {
 		}
 		
 		public void draw(SpriteBatch batch) {
-			batch.draw(fadeTex, 0, 0, LibGDXGame.width, LibGDXGame.height);
+			batch.draw(fadeTex, 0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
 		}
 	}
 }
