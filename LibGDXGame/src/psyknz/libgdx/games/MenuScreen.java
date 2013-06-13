@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class MenuScreen extends GameScreen implements ElementListener {
 
 	private Texture tex;
-	private TextureRegion background;
 	private BitmapFont font;
 	
 	public CharSequence str;
@@ -34,7 +33,6 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		tex = new Texture(pix);
 		pix.dispose();
 		
-		background = new TextureRegion(tex, 0, 0, 1, 1);
 		TextureRegion activeTex = new TextureRegion(tex, 1, 0, 1, 1);
 		TextureRegion inactiveTex = new TextureRegion(tex, 0, 1, 1, 1);
 		TextureRegion selectedTex = new TextureRegion(tex, 1, 1, 1, 1);
@@ -56,6 +54,7 @@ public class MenuScreen extends GameScreen implements ElementListener {
 	public void dispose() {
 		super.dispose();
 		tex.dispose();
+		font.dispose();
 	}
 	
 	public void action(String id) {
@@ -73,8 +72,6 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		}
 		
 		public void draw(SpriteBatch batch) {
-			batch.draw(background, 0, 0, game.GAME_WIDTH, game.GAME_HEIGHT);
-			
 			str = "x: " + touchX() + " ,y: " + touchY();
 			font.draw(batch, str, leftOffset, 200);
 			

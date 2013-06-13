@@ -1,6 +1,5 @@
 package psyknz.libgdx.games;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -67,7 +66,7 @@ public class SplashScreen extends GameScreen {
 	    		fadePix.setColor(fadeColor);
 				fadePix.drawPixel(0, 0);
 				fadeTex.draw(fadePix, 0, 0);
-				if(Gdx.input.isTouched()) {
+				if(isTouched()) {
 					fadeTimer[1] = 0;
 				}
 				else {

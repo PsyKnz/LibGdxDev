@@ -22,7 +22,6 @@ public class TeleportingElement extends GameElement {
 	private Rectangle bounds;
 	
 	private float timer;
-	private float angle;
     
 	public TeleportingElement(Sprite outline, Sprite inside, Color color, int x, int y) {
 		// Sets the elements sprites and their color.
