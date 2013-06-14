@@ -24,7 +24,7 @@ public class GameScreen implements Screen {
 	protected ArrayList<GameElement> elements;
 	
 	// Member objects used to draw the screen.
-	protected int resizeConstraint = CONSTRAIN_MAX;
+	protected int resizeConstraint = GameScreen.CONSTRAIN_MAX;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	
@@ -39,17 +39,15 @@ public class GameScreen implements Screen {
 	
 	public GameScreen(LibGDXGame game) {
 		this.game = game;
-		
-		elementOverride = null;
-		elements = new ArrayList<GameElement>();
-
-		background = new Color(0, 0, 0, 1);
-
-		camera = new OrthographicCamera();
 	}
 	
 	@Override
 	public void show() {
+		elementOverride = null;
+		elements = new ArrayList<GameElement>();
+
+		background = new Color(0, 0, 0, 1);
+		camera = new OrthographicCamera();
 		batch = new SpriteBatch();
 	}
 	
@@ -132,7 +130,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void hide() {
-		this.dispose();
+		// this.dispose();
 	}
 	
 	@Override

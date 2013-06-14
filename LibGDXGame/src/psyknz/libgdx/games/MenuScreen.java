@@ -3,7 +3,6 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class MenuScreen extends GameScreen implements ElementListener {
@@ -37,8 +36,6 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		TextureRegion inactiveTex = new TextureRegion(tex, 0, 1, 1, 1);
 		TextureRegion selectedTex = new TextureRegion(tex, 1, 1, 1, 1);
 		
-		elements.add(new MenuScreenElement());
-		
 		font = new BitmapFont();
 		font.setColor(1, 1, 1, 1);
 		
@@ -59,26 +56,5 @@ public class MenuScreen extends GameScreen implements ElementListener {
 	
 	public void action(String id) {
 		game.setScreen(new PlayScreen(game));
-	}
-	
-	private class MenuScreenElement extends GameElement {
-		
-		public MenuScreenElement() {
-			
-		}
-		
-		public void update(float delta) {
-			
-		}
-		
-		public void draw(SpriteBatch batch) {
-			str = "x: " + touchX() + " ,y: " + touchY();
-			font.draw(batch, str, leftOffset, 200);
-			
-			str = "visibleWidth: " + visibleWidth + ", visibleHeight: " + visibleHeight;
-			font.draw(batch, str, leftOffset, 50);
-			str = "leftOffset: " + leftOffset + ", bottomOffset: " + bottomOffset;
-			font.draw(batch, str, leftOffset, 80);
-		}
 	}
 }

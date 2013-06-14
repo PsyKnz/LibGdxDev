@@ -5,10 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-/* A ShapeElement is a GameElement object intended to draw simple shapes to the screen which implement some game logic.
- * Generally the ShapeElement should be constructed from two shape sprites, one which is used to produce the outline of the shape and one used to form the body of the shape.
- * The two shape sprites should be constructed from textures which are all white.
- * The color the outline is drawn is set when the object is constructed while the color of the shape body is a blend of the outline color and background color of the screen. If the background color of the screen is changed and you want to update the color of the object you should call setColor(getColor());.*/
+/* A ShapeElement is a GameElement object intended to draw simple shapes to the screen which implement some game logic. Generally the
+ * ShapeElement should be constructed from two shape sprites, one which is used to produce the outline of the shape and one used to form
+ * the body of the shape. The two shape sprites should be constructed from textures which are all white. The color the outline is drawn
+ * is set when the object is constructed while the color of the shape body is a blend of the outline color and background color of the
+ * screen. If the background color of the screen is changed and you want to update the color of the object you should
+ * call setColor(getColor());. */
 public class ShapeElement extends GameElement {
     
 	// The width in in-game units that all shapes outlines should be.
@@ -22,15 +24,20 @@ public class ShapeElement extends GameElement {
 	
 	// Color used when drawing the shape.
 	public Color color;
+	public boolean filled = false;
 	
 	// The bounding box for the shape. Used to position the shape on the screen.
 	protected Rectangle bounds;
 	
 	public ShapeElement(GameScreen screen, Sprite shape, Color color, int x, int y, int size) {
+		this(screen, shape, color, x, y, size, size);
+	}
+	
+	public ShapeElement(GameScreen screen, Sprite shape, Color color, int x, int y, int width, int height) {
 		this.screen = screen;
 		this.shape = shape;
 		this.color = color;
-		bounds = new Rectangle(x - size / 2, y - size / 2, size, size);
+		bounds = new Rectangle(x - width / 2, y - height / 2, width, height);
 	}
 	
 	// Updates the game logic for the ShapeElement. Intended for overriding.
@@ -46,7 +53,8 @@ public class ShapeElement extends GameElement {
 		shape.draw(batch);
 		
 		// Draws the body of the shape.
-		shape.setColor(color.r * screen.background.r, color.g * screen.background.g, color.b * screen.background.b, 1);
+		if(filled) shape.setColor((color.r + screen.background.r) / 2, (color.g + screen.background.g) / 2, (color.b + screen.background.b) / 2, color.a);
+		else shape.setColor(screen.background);
 		shape.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 		shape.draw(batch);
 	}

@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class SnakeElement extends ShapeElement {
 	
 	// How much bigger tge head should be relative to the body.
-	public static final float HEAD_SCALE = 1.2f;
+	public static final float HEAD_SCALE = 1.8f;
 	
 	// List of the SnakeElements SnakeBody pieces.
 	private ArrayList<SnakeBody> body;
@@ -25,13 +25,14 @@ public class SnakeElement extends ShapeElement {
 		body = new ArrayList<SnakeBody>();
 		
 		// Creates the head of the snake then adds the given number of SnakeBody parts.
-		body.add(new SnakeBody(null, x, y, (int) (bounds.getWidth() * HEAD_SCALE)));
+		body.add(new SnakeBody(null, x, y, (int) (size * HEAD_SCALE)));
 		tail = body.get(0);
 		for(int i = 0; i < length; i++) {
 			grow();
 		}
 	}
 	
+	@Override
 	public void update(float delta) {
 		// updates the position of all SnakeBody parts from the head to the tail.
 		for(int i = 0; i < body.size(); i++) {
@@ -42,10 +43,12 @@ public class SnakeElement extends ShapeElement {
 		body.get(body.size() - 1).moved = false;
 	}
 	
+	@Override
 	public void draw(SpriteBatch batch) {
 		// Draws the outline of the last piece of the snake (which wont draw itself).
 		shape.setColor(color);
-		shape.setBounds(tail.bounds.x - OUTLINE_SIZE, tail.bounds.y - OUTLINE_SIZE, tail.bounds.width + OUTLINE_SIZE * 2, tail.bounds.height + OUTLINE_SIZE * 2);
+		shape.setBounds(tail.bounds.x - OUTLINE_SIZE, tail.bounds.y - OUTLINE_SIZE, 
+						tail.bounds.width + OUTLINE_SIZE * 2, tail.bounds.height + OUTLINE_SIZE * 2);
 		shape.draw(batch);
 		
 		// Loops through the entire SnakeBody drawing each piece from last to first.
@@ -71,7 +74,8 @@ public class SnakeElement extends ShapeElement {
 		super.move(x, y);
 		
 		// Moves the head of the snake to the position of the SnakeElement.
-		body.get(0).bounds.set(bounds);
+		body.get(0).bounds.x = bounds.x - (body.get(0).bounds.width - bounds.width) / 2;
+		body.get(0).bounds.y = bounds.y - (body.get(0).bounds.width - bounds.width) / 2;
 		body.get(0).moved = true;
 	}
 	
@@ -121,7 +125,7 @@ public class SnakeElement extends ShapeElement {
 			}
 			
 			// Draws the inside of the SnakeBody.
-			shape.setColor(color.r * screen.background.r, color.g * screen.background.g, color.b * screen.background.b, 1);
+			shape.setColor((color.r + screen.background.r) / 2, (color.g + screen.background.g) / 2, (color.b + screen.background.b) / 2, color.a);
 			shape.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 			shape.draw(batch);
 		}

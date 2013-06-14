@@ -2,6 +2,7 @@ package psyknz.libgdx.games;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
@@ -28,12 +29,19 @@ public class PlayScreen extends GameScreen {
 		// Draws a dot to use for making rectangles.
 		pix.fillRectangle(0, 32, 1, 1);
 		
+		// Create the texture and then dispose of the pixmap used for that texture.
 		tex = new Texture(pix);
+		pix.dispose();
+		
+		// Generate sprites which will be used GameElements
 		Sprite circle = new Sprite(tex, 0, 0, 32, 32);
-		// Sprite dot = new Sprite(tex, 0, 32, 1, 1);
+		Sprite dot = new Sprite(tex, 0, 32, 1, 1);
 		
 		font = new BitmapFont();
 		font.setColor(1, 1, 1, 1);
+		
+		elements.add(new ShapeElement(this, dot, Color.RED,
+					 game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, game.GAME_WIDTH - 20, game.GAME_HEIGHT - 20));
 		
 		elements.add(new PlayerElement(this, circle, game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2));
 		
@@ -44,7 +52,6 @@ public class PlayScreen extends GameScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		pix.dispose();
 		tex.dispose();
 		font.dispose();
 	}

@@ -19,7 +19,7 @@ public class PlayerElement extends GameElement{
 	public PlayerElement(GameScreen screen, Sprite circle, int x, int y) {
 		this.screen = screen;
 		
-		player = new SnakeElement(screen, circle, new Color(0, 0, 1, 1), x, y, 32, 5);
+		player = new SnakeElement(screen, circle, Color.BLUE, x, y, 24, 25);
 		head = player.getBounds(0);
 	}
 	
