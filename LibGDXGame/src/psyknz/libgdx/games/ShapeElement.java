@@ -24,7 +24,7 @@ public class ShapeElement extends GameElement {
 	
 	// Color used when drawing the shape.
 	public Color color;
-	public boolean filled = false;
+	public boolean filled = true;
 	
 	// The bounding box for the shape. Used to position the shape on the screen.
 	protected Rectangle bounds;

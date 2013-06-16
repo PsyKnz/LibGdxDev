@@ -40,8 +40,9 @@ public class PlayScreen extends GameScreen {
 		font = new BitmapFont();
 		font.setColor(1, 1, 1, 1);
 		
-		elements.add(new ShapeElement(this, dot, Color.RED,
-					 game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, game.GAME_WIDTH - 20, game.GAME_HEIGHT - 20));
+		ShapeElement arena = new ShapeElement(this, dot, Color.RED, game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, game.GAME_WIDTH - 20, game.GAME_HEIGHT - 20);
+		arena.filled = false;
+		elements.add(arena);
 		
 		elements.add(new PlayerElement(this, circle, game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2));
 		

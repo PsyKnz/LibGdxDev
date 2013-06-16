@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.*;
 
 public class SnakeElement extends ShapeElement {
-	
-	// How much bigger tge head should be relative to the body.
+	// How much bigger the head should be relative to the body.
 	public static final float HEAD_SCALE = 1.8f;
 	
 	// List of the SnakeElements SnakeBody pieces.
@@ -74,9 +75,7 @@ public class SnakeElement extends ShapeElement {
 		super.move(x, y);
 		
 		// Moves the head of the snake to the position of the SnakeElement.
-		body.get(0).bounds.x = bounds.x - (body.get(0).bounds.width - bounds.width) / 2;
-		body.get(0).bounds.y = bounds.y - (body.get(0).bounds.width - bounds.width) / 2;
-		body.get(0).moved = true;
+		body.get(0).move(x, y);
 	}
 	
 	/* Class representing a single section of the SnakeElements body. */
@@ -92,7 +91,7 @@ public class SnakeElement extends ShapeElement {
 		public boolean moved = false;
 		
 		// Temporary variables used for movement calculation.
-		private float angle;
+		private float angle, xDif, yDif;
 		
 		public SnakeBody(SnakeBody parent, int x, int y, int size) {
             this.parent = parent;			
@@ -102,16 +101,21 @@ public class SnakeElement extends ShapeElement {
 		// Moves the SnakeBody part around the screen, following its parent part. The head should have its parent set to null.
 		public void update(float delta) {
 			if(parent != null && parent.moved) {
-				// Finds the angle of the vector produced by the difference in position of this SnakeBody piece and its parent.
-				angle = MathUtils.atan2(parent.bounds.y - bounds.y, parent.bounds.x - bounds.x);
+				// Find the distance between the two body parts.
+				xDif = parent.getX() - getX();
+				yDif = parent.getY() - getY();
 				
-				// Finds the new co-ordinates for the snake body so that it is linked to its parent at its previous angle.
-				bounds.x = parent.bounds.x - MathUtils.cos(angle) * (parent.bounds.width / 2 + 1);
-				bounds.y = parent.bounds.y - MathUtils.sin(angle) * (parent.bounds.width / 2 + 1);
+				// If the distance is greater than the radius of the parent body part then this part moves.
+				if(Math.sqrt(Math.pow(xDif, 2) + Math.pow(yDif, 2)) >= bounds.width / 2 + 1) {
+				    // Finds the angle of the vector produced by the difference in position of this SnakeBody piece and its parent.
+				    angle = MathUtils.atan2(yDif, xDif);
 				
-				// Declares the parent as having no longer moved and this as moved for the next piece of the snake.
-				parent.moved = false;
-				moved = true;
+				    // Finds the new co-ordinates for the snake body so that it is linked to its parent at its previous angle.
+				    move(parent.getX() - MathUtils.cos(angle) * (parent.bounds.width / 2 + 1), parent.getY() - MathUtils.sin(angle) * (parent.bounds.width / 2 + 1));
+				
+				    // Declares the parent as having no longer moved and this as moved for the next piece of the snake.
+				    parent.moved = false;
+				}
 			}
 		}
 		
@@ -132,13 +136,19 @@ public class SnakeElement extends ShapeElement {
 		
 		// Returns the x co-ordinate for the centre point of the SnakeBody part.
 		public int getX() {
-			return (int) (bounds.x + bounds.width / 2);
+			return (int) (this.bounds.x + this.bounds.width / 2);
 		}
 		
 		// Returns the y co-ordinate for the centre point of the SnakeBody part.
 		public int getY() {
-			return (int) (bounds.y + bounds.height / 2);
+			return (int) (this.bounds.y + this.bounds.height / 2);
 		}
 		
+		// Moves the body part so that it is centered about the given (x, y) co-ordinate.
+		private void move(float x, float y) {
+			bounds.x = x - bounds.width / 2;
+			bounds.y = y - bounds.height / 2;
+			moved = true;
+		}
 	}
 }
