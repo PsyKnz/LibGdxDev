@@ -3,7 +3,7 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class TextElement extends GameElement {
+public class TextElement implements GameElement {
     
 	// Constants for aligning the text.
 	public static final int LEFT = 0;
@@ -40,7 +40,7 @@ public class TextElement extends GameElement {
 	
 	@Override
 	public void update(float delta) {
-		// insert different animation scripts here.
+		// INSERT CODE TO ANIMATE THE TEXT HERE.
 	}
 	
 	@Override

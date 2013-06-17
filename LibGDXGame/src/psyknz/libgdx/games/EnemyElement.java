@@ -1,20 +1,19 @@
 package psyknz.libgdx.games;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 
-public class EnemyElement extends GameElement {
+public class EnemyElement implements GameElement {
     
 	// List of all enemy objects on the screen.
-	private ArrayList<GameElement> enemies;
+	private Array<GameElement> enemies;
 	
 	// Timer used to determine when to spawn a new enemy.
 	private float spawnTimer;
 	
 	public EnemyElement() {
-		enemies = new ArrayList<GameElement>();
+		enemies = new Array<GameElement>();
 		
 		spawnTimer = MathUtils.random();
 	}
@@ -29,14 +28,14 @@ public class EnemyElement extends GameElement {
 		}
 		
 		// Update game logic for all on-screen enemies.
-		for(int i = 0; i < enemies.size(); i++) {
+		for(int i = 0; i < enemies.size; i++) {
 			enemies.get(i).update(delta);
 		}
 	}
 	
 	public void draw(SpriteBatch batch) {
 		// Draws all on-screen enemies
-		for(int i = 0; i < enemies.size(); i++) {
+		for(int i = 0; i < enemies.size; i++) {
 			enemies.get(i).draw(batch);
 		}
 	}

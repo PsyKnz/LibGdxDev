@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class ButtonElement extends GameElement {
+public class ButtonElement implements GameElement {
 	
 	private GameScreen screen;
 	

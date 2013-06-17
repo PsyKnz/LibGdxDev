@@ -3,71 +3,48 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
 
-public class TeleportingElement extends GameElement {
-    // The elements sprites.
-	private Sprite outline;
-	private Sprite inside;
+public class TeleportingElement extends ShapeElement {
 	
-	// The elements colors, used when drawing the sprites.
-	public Color outlineColor;
-	public Color insideColor;
+	/* The minimum amount of time before the element should teleport in seconds and a variable amount of time before the element should
+	 * teleport. The variable time should be multiplied by a random float so that the element moves unpredictably. Its value is the
+	 * maximu, number of seconds before the element should move again. */
+	private final int minimumTime = 3;
+	private int variableTime = 10;
 	
-	// The size of the element in in-game co-ordinates.
-	private final int SIZE = 32;
+	// Timer to keep track of when the element should teleport.
+	private float teleportTimer;
 	
-	// The bounding box for the element.
-	private Rectangle bounds;
-	
-	private float timer;
+	// The angle the sprite should be rotated by when drawn.
+	private float angle = 0;
     
-	public TeleportingElement(Sprite outline, Sprite inside, Color color, int x, int y) {
-		// Sets the elements sprites and their color.
-		this.outline = outline;
-		this.inside = inside;
+	public TeleportingElement(GameScreen screen, Sprite shape, Color color, int x, int y, int size) {
+		super(screen, shape, color, x, y, size);
 		
-		setColor(color);
-		
-		// Generate the elements bounding box.
-		this.bounds = new Rectangle(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
-		
-		timer = MathUtils.random() * 5 + 5;
+		// Sets the teleporting timer.
+		teleportTimer = MathUtils.random() * variableTime + minimumTime;
 	}
 	
+	@Override
 	public void update(float delta) {
-		timer -= delta;
+		teleportTimer -= delta;
 		
-		if(timer <= 0) {
-			// teleport the element
-			timer = MathUtils.random() * 5 + 5;
+		// Once the timer reaches 0 the element teleports to a new location. EVENTUALLY NEEDS TO FIND A LOCATION WHICH DOESN'T COLLIDE.
+		if(teleportTimer <= 0) {
+			move(MathUtils.random(screen.visibleWidth), MathUtils.random(screen.visibleHeight));
+			teleportTimer = MathUtils.random() * variableTime + minimumTime;
 		}
-		else if(timer <= 2) {
-			// spin the element. the closer the timer is to 0 the faster it should spin.
+		
+		// Once the timer gets under the minimum amount of time before it should teleport it starts spinning to signal what will happen.
+		else if(teleportTimer <= minimumTime) {
+			// CODE TO SPIN THE ELEMENT GOES HERE. AMOUNT OF SPIN SHOULD BE DETERMINED BY HOW CLOSE THE TIMER IS TO 0.
 		}
 	}
 	
+	@Override
 	public void draw(SpriteBatch batch) {
-		// Draws the outline of the element.
-		outline.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-		outline.setColor(outlineColor);
-		outline.draw(batch);
-		
-		// Draws the inside of the element.
-		inside.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-		inside.setColor(insideColor);
-		inside.draw(batch);
-	}
-	
-	// Returns the bounding box for the element.
-	public Rectangle getBounds() {
-		return bounds;
-	}
-	
-	// Sets the color of the elements outline and blends that with the background to produce the inside color.
-	public void setColor(Color color) {
-		outlineColor = color;
-		insideColor = new Color(color.r * 0.5f, color.g * 0.5f, color.b * 0.5f, 1);
+		super.draw(batch);
+		// EVENTUALLY THE DRAW NEEDS TO BE CHANGED SO THAT THE ELEMENT UTILISES A SPINNING ANIMATION.
 	}
 }

@@ -15,11 +15,9 @@ public class MenuScreen extends GameScreen implements ElementListener {
 	public MenuScreen(LibGDXGame game) {
 		super(game);
 	}
-    
+	
 	@Override
-	public void show() {
-		super.show();
-        
+	public void loadElements() {
 		Pixmap pix = new Pixmap(2, 2, Pixmap.Format.RGBA4444);
 		pix.setColor(0, 0, 0, 1);
 		pix.drawPixel(0, 0);
@@ -44,7 +42,7 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		elements.add(new ButtonElement("Play", game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, prefs, this, this));
 		
 		font.setScale(1.0f);
-		elements.add(new TextElement("Menu Screen", font, 0, game.GAME_HEIGHT));
+		elements.add(new TextElement("Menu Screen", font, 0 - leftOffset, visibleHeight - bottomOffset));
 	}
 	
 	@Override
@@ -55,6 +53,6 @@ public class MenuScreen extends GameScreen implements ElementListener {
 	}
 	
 	public void action(String id) {
-		game.setScreen(new PlayScreen(game));
+		setScreen(new PlayScreen(game));
 	}
 }

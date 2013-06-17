@@ -3,15 +3,13 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
-public class PlayerElement extends GameElement{
+public class PlayerElement implements GameElement{
     
 	private GameScreen screen;
 	
-	// Reference to the SnakeElement which the player can control and its head.
+	// Reference to the SnakeElement which the player can control and its heads bounding box.
 	private SnakeElement player;
-	private Rectangle head;
 	
 	// Whether or not the players SnakeElement head has been touched.
 	private boolean touched = false;
@@ -20,14 +18,13 @@ public class PlayerElement extends GameElement{
 		this.screen = screen;
 		
 		player = new SnakeElement(screen, circle, Color.BLUE, x, y, 24, 25);
-		head = player.getBounds(0);
 	}
 	
 	// Tests for user input and moves the players SnakeElement appropriately. Needs a better implementation.
 	public void update(float delta) {
 		// If the screen is touched checks to see if the players finger is above the snakes head, If it is the snake is set to touched.
 		if(screen.isTouched()) {
-			if(head.contains(screen.touchX(), screen.touchY())) {
+			if(player.getBounds(0).contains(screen.touchX(), screen.touchY())) {
 				touched = true;
 			}
 			

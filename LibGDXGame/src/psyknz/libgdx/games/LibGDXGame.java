@@ -20,7 +20,7 @@ public class LibGDXGame extends Game {
 		assets = new AssetManager();
 		
 		// Loads the first screen to use in the game.
-		setScreen(new SplashScreen(this));
+		setScreen(new PlayScreen(this));
 	}
 	
 	@Override

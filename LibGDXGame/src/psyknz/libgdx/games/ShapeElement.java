@@ -9,9 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
  * ShapeElement should be constructed from two shape sprites, one which is used to produce the outline of the shape and one used to form
  * the body of the shape. The two shape sprites should be constructed from textures which are all white. The color the outline is drawn
  * is set when the object is constructed while the color of the shape body is a blend of the outline color and background color of the
- * screen. If the background color of the screen is changed and you want to update the color of the object you should
- * call setColor(getColor());. */
-public class ShapeElement extends GameElement {
+ * screen. */
+public class ShapeElement implements GameElement {
     
 	// The width in in-game units that all shapes outlines should be.
 	public static final int OUTLINE_SIZE = 3;

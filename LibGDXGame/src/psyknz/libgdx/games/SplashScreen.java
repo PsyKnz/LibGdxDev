@@ -15,11 +15,9 @@ public class SplashScreen extends GameScreen {
 	public SplashScreen(LibGDXGame game) {
 		super(game);
 	}
-
+	
 	@Override
-	public void show() {
-		super.show();
-
+	public void loadElements() {
 		font = new BitmapFont();
 		
 		font.setScale(2.0f);
@@ -30,9 +28,9 @@ public class SplashScreen extends GameScreen {
 		
 		font.setScale(1.0f);
 		elements.add(new TextElement("Splash Screen", font, 0, game.GAME_HEIGHT));
-		
 	}
 	
+	@Override
 	public void dispose() {
 		super.dispose();
 		fadePix.dispose();
@@ -40,7 +38,7 @@ public class SplashScreen extends GameScreen {
 		font.dispose();
 	}
 	
-	private class SplashScreenElement extends GameElement {
+	private class SplashScreenElement implements GameElement {
 		
 		private float[] fadeTimer = {1.0f, 3.0f, 1.0f};
 		private Color fadeColor = new Color(0, 0, 0, 1);
@@ -81,7 +79,7 @@ public class SplashScreen extends GameScreen {
 				fadeTimer[2] -= delta;
 			}
 			else {
-				game.setScreen(new MenuScreen(game));
+				setScreen(new MenuScreen(game));
 			}
 		}
 		

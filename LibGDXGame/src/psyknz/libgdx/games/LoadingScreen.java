@@ -13,15 +13,13 @@ public class LoadingScreen extends GameScreen {
 	 * assets are queued up. A GameAssetLoader Element is then constructed to ensure the AssetManager continues
 	 * to load all game assets and to display the progress of this process. */
 	@Override
-	public void show() {
-		super.show();
-		
+	protected void loadElements() {
 		// Forcefully loads all assets required to present the loading screen here.
 		LibGDXGame.assets.load("data/libgdx.png", Texture.class);
 		LibGDXGame.assets.finishLoading();
-		
+				
 		// Queues up all other assets to load here.
-		
+				
 		// Adds all elements which are part of the loading screen here.
 		elements.add(new GameAssetLoader(this));
 	}
@@ -34,7 +32,7 @@ public class LoadingScreen extends GameScreen {
 	/* A GameAssetLoader Element is intended solely to be used by a LoadingScreen to keep the AssetManager
 	 * updating and to draw some form of progress metre that tracks the updating process. Once the AssetManager
 	 * has reached 100% the finish() method is called on the LoadingScreen object. */
-	private class GameAssetLoader extends GameElement {
+	private class GameAssetLoader implements GameElement {
 		
 		private LoadingScreen parent;
 		

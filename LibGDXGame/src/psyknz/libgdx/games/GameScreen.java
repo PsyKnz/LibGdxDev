@@ -1,15 +1,14 @@
 package psyknz.libgdx.games;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 
-public class GameScreen implements Screen {
+public abstract class GameScreen implements Screen {
     // Constraints used for determining how the cameras focus should be stretched to fit the screen.
 	public static final int CONSTRAIN_WIDTH = 0;
 	public static final int CONSTRAIN_HEIGHT = 1;
@@ -20,8 +19,8 @@ public class GameScreen implements Screen {
 	protected LibGDXGame game;
 	
 	// Collection of all game elements present in the current screen. The superElement will override all other elements when present.
-	protected GameElement elementOverride;
-	protected ArrayList<GameElement> elements;
+	protected GameElement elementOverride = null;
+	protected Array<GameElement> elements;
 	
 	// Member objects used to draw the screen.
 	protected int resizeConstraint = GameScreen.CONSTRAIN_MAX;
@@ -37,25 +36,32 @@ public class GameScreen implements Screen {
 	// The color used when clearing the screen.
 	public Color background;
 	
+	private GameScreen nextScreen = null;
+	
 	public GameScreen(LibGDXGame game) {
 		this.game = game;
 	}
 	
 	@Override
 	public void show() {
-		elementOverride = null;
-		elements = new ArrayList<GameElement>();
+		elements = new Array<GameElement>();
 
 		background = new Color(0, 0, 0, 1);
 		camera = new OrthographicCamera();
 		batch = new SpriteBatch();
 	}
 	
+	/* All game elements should be constructed in the loadElements function rather than in the show() of the object. This allows for
+	 * use of the visibleWidth, visibleHeight, leftOffset and bottomOffset values when placing elements on the screen. Particularly
+	 * useful for when you want to place UI elements which should always be drawn at the same spot on the screen irrespective of how
+	 * the screen has been resized. */
+	protected abstract void loadElements();
+	
 	@Override
 	public void render(float delta) {
 		// Runs the logic for all game elements. If there is an elementOverride only its update method is called.
 		if(elementOverride == null) {
-		    for(int i = 0; i < elements.size(); i++) {
+		    for(int i = 0; i < elements.size; i++) {
 			    elements.get(i).update(delta);
             }
 		}
@@ -71,11 +77,16 @@ public class GameScreen implements Screen {
 		
 		// Draws all game elements to the screen.
 		batch.begin();
-		for(int i = 0; i < elements.size(); i++) {
+		for(int i = 0; i < elements.size; i++) {
 			elements.get(i).draw(batch);
 		}
 		if(elementOverride != null) elementOverride.draw(batch);
 		batch.end();
+		
+		// Loads the next GameScreen. Objects should not call game.setScreen() directly as it will unload game assets too early.
+		if(nextScreen != null) {
+			game.setScreen(nextScreen);
+		}
 	}
 	
 	// Resizes the screen using the desired resizing conatraint, sets the camera, and then centers it.
@@ -87,6 +98,7 @@ public class GameScreen implements Screen {
 		camera.setToOrtho(false, visibleWidth, visibleHeight);
 		camera.position.x -= leftOffset;
 		camera.position.y -= bottomOffset;
+		loadElements();
 	}
 	
 	// Overloaded resize function which allows for the camera to be variably set based on which dimension is most necessary to have visible
@@ -130,7 +142,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void hide() {
-		// this.dispose();
+		this.dispose();
 	}
 	
 	@Override
@@ -149,5 +161,11 @@ public class GameScreen implements Screen {
 	
 	public int touchY() {
 		return visibleHeight - Gdx.input.getY() * visibleHeight / Gdx.graphics.getHeight() - bottomOffset;
+	}
+	
+	// Use this function to change the current game screen. Forces screen changes to only occur at the end of the rendering cycle.
+	// THIS METHOD WILL EVENTUALLY IMPLEMENT TRANSITIONS WHICH WILL BE CALLED AS A SECOND ARGUMENT.
+	public void setScreen(GameScreen screen) {
+		nextScreen = screen;
 	}
 }

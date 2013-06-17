@@ -1,21 +1,18 @@
 package psyknz.libgdx.games;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Array;
 
 public class SnakeElement extends ShapeElement {
 	// How much bigger the head should be relative to the body.
 	public static final float HEAD_SCALE = 1.8f;
 	
 	// List of the SnakeElements SnakeBody pieces.
-	private ArrayList<SnakeBody> body;
+	private Array<SnakeBody> body;
 	
 	// Reference to the last piece of the snake, used for drawing and growing.
 	private SnakeBody tail;
@@ -23,7 +20,7 @@ public class SnakeElement extends ShapeElement {
 	public SnakeElement(GameScreen screen, Sprite shape, Color color, int x, int y, int size, int length) {
 		super(screen, shape, color, x, y, size);
 		
-		body = new ArrayList<SnakeBody>();
+		body = new Array<SnakeBody>();
 		
 		// Creates the head of the snake then adds the given number of SnakeBody parts.
 		body.add(new SnakeBody(null, x, y, (int) (size * HEAD_SCALE)));
@@ -36,12 +33,12 @@ public class SnakeElement extends ShapeElement {
 	@Override
 	public void update(float delta) {
 		// updates the position of all SnakeBody parts from the head to the tail.
-		for(int i = 0; i < body.size(); i++) {
+		for(int i = 0; i < body.size; i++) {
 			body.get(i).update(delta);
 		}
 		
 		// sets moved for the last part of the tail to false since the part can't do it itself.
-		body.get(body.size() - 1).moved = false;
+		body.get(body.size - 1).moved = false;
 	}
 	
 	@Override
@@ -53,7 +50,7 @@ public class SnakeElement extends ShapeElement {
 		shape.draw(batch);
 		
 		// Loops through the entire SnakeBody drawing each piece from last to first.
-		for(int i = body.size() - 1; i >= 0; i--) {
+		for(int i = body.size - 1; i >= 0; i--) {
 			body.get(i).draw(batch);
 		}
 	}
@@ -61,7 +58,7 @@ public class SnakeElement extends ShapeElement {
 	// Causes the body of the snake to grow by 1 piece.
 	public void grow() {
 		body.add(new SnakeBody(tail, tail.getX(), tail.getY(), (int) bounds.getWidth()));
-		tail = body.get(body.size() - 1);
+		tail = body.get(body.size - 1);
 	}
 	
 	// Returns the bounding box of the SnakeBody part at the given index.
@@ -79,7 +76,7 @@ public class SnakeElement extends ShapeElement {
 	}
 	
 	/* Class representing a single section of the SnakeElements body. */
-	private class SnakeBody extends GameElement {
+	private class SnakeBody implements GameElement {
 		
 		// The parent SnakeBody object is the one which this SnakeBody part follows around the screen.
 		private SnakeBody parent;
@@ -111,7 +108,7 @@ public class SnakeElement extends ShapeElement {
 				    angle = MathUtils.atan2(yDif, xDif);
 				
 				    // Finds the new co-ordinates for the snake body so that it is linked to its parent at its previous angle.
-				    move(parent.getX() - MathUtils.cos(angle) * (parent.bounds.width / 2 + 1), parent.getY() - MathUtils.sin(angle) * (parent.bounds.width / 2 + 1));
+				    move(parent.getX() - MathUtils.cos(angle) * (parent.bounds.width / 2 + 1), parent.getY() - MathUtils.sin(angle) * (parent.bounds.height / 2 + 1));
 				
 				    // Declares the parent as having no longer moved and this as moved for the next piece of the snake.
 				    parent.moved = false;
