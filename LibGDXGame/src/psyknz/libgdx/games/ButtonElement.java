@@ -50,7 +50,7 @@ public class ButtonElement implements GameElement {
 				selected = false;
 			}
 		}
-		else if(selected) listener.action(label.getText());
+		else if(selected) listener.event(new ElementEvent(this, ElementEvent.EventType.TOUCHED));
 	}
 	
 	// Draws the button. The texture used depends on the current state of the button.

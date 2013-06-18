@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PlayerElement implements GameElement{
     
-	private GameScreen screen;
+	private PlayScreen screen;
 	
 	// Reference to the SnakeElement which the player can control and its heads bounding box.
 	private SnakeElement player;
@@ -14,7 +14,7 @@ public class PlayerElement implements GameElement{
 	// Whether or not the players SnakeElement head has been touched.
 	private boolean touched = false;
 	
-	public PlayerElement(GameScreen screen, Sprite circle, int x, int y) {
+	public PlayerElement(PlayScreen screen, Sprite circle, int x, int y) {
 		this.screen = screen;
 		
 		player = new SnakeElement(screen, circle, Color.BLUE, x, y, 24, 25);
@@ -37,6 +37,13 @@ public class PlayerElement implements GameElement{
 			// If the player releases the snake head ensures that the snake isn't set to touched.
 			touched = false;
 		}
+		
+		// If the player passes outside of the arena boundaries then the background changes colour.
+		// EVENTUALLY THE PLAYER WILL EXPLODE INSTEAD.
+		if(!screen.arena.bounds.contains(player.getBounds(0))) {
+			screen.background.set(screen.arena.color.r / 3, screen.arena.color.g / 3, screen.arena.color.b / 2, screen.background.a);
+		}
+		else screen.background.set(Color.BLACK);
 		
 		// Allows the players SnakeBody parts to follow along behind the head.
 		player.update(delta);
