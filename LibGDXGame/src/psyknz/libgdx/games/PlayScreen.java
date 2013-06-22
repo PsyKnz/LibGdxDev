@@ -14,8 +14,8 @@ public class PlayScreen extends GameScreen implements ElementListener {
 	
 	// References to all core GameElements on the screen.
 	public ShapeElement arena;
-	private PlayerElement player;
-	private EnemyElement enemies;
+	public PlayerElement player;
+	public EnemyElement enemies;
 	
 	public PlayScreen(LibGDXGame game) {
 		super(game);
@@ -49,6 +49,9 @@ public class PlayScreen extends GameScreen implements ElementListener {
 		
 		player = new PlayerElement(this, circle, game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2);
 		elements.add(player);
+		
+		enemies = new EnemyElement(this, new Sprite[] {circle});
+		elements.add(enemies);
 		
 		font.setScale(1.0f);
 		elements.add(new TextElement("Play Screen", font, 0 - leftOffset, visibleHeight - bottomOffset));

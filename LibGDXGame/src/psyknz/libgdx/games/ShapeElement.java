@@ -64,7 +64,7 @@ public class ShapeElement implements GameElement {
 	}
 	
 	// Moves the ShapeElemeny to point (x, y) by centering its bounding box around it.
-	public void move(int x, int y) {
+	public void move(float x, float y) {
 		bounds.x = x - bounds.width / 2;
 		bounds.y = y - bounds.height / 2;
 	}

@@ -3,6 +3,7 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 
 public class PlayerElement implements GameElement{
     
@@ -14,10 +15,13 @@ public class PlayerElement implements GameElement{
 	// Whether or not the players SnakeElement head has been touched.
 	private boolean touched = false;
 	
+	// Temporary variable to process collisions.
+	private Array<ShapeElement> collidedElements;
+	
 	public PlayerElement(PlayScreen screen, Sprite circle, int x, int y) {
 		this.screen = screen;
 		
-		player = new SnakeElement(screen, circle, Color.BLUE, x, y, 24, 25);
+		player = new SnakeElement(screen, circle, Color.BLUE, x, y, 24, 0);
 	}
 	
 	// Tests for user input and moves the players SnakeElement appropriately. Needs a better implementation.
@@ -44,6 +48,15 @@ public class PlayerElement implements GameElement{
 			screen.background.set(screen.arena.color.r / 3, screen.arena.color.g / 3, screen.arena.color.b / 2, screen.background.a);
 		}
 		else screen.background.set(Color.BLACK);
+		
+		// Tests to see if the player element is colliding with one of the on screen enemies.
+		collidedElements = screen.enemies.testCollision(player.getBounds(0));
+		if(collidedElements != null) {
+			for(int i = 0; i < collidedElements.size; i++) {
+				player.grow();
+				screen.enemies.destroyElement(collidedElements.get(i));
+			}
+		}
 		
 		// Allows the players SnakeBody parts to follow along behind the head.
 		player.update(delta);
