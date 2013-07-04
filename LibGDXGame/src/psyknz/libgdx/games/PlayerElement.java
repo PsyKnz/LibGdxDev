@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayerElement implements GameElement{
-    
+
 	private PlayScreen screen;
 	
 	// Reference to the SnakeElement which the player can control and its heads bounding box.
@@ -16,7 +16,7 @@ public class PlayerElement implements GameElement{
 	private boolean touched = false;
 	
 	// Temporary variable to process collisions.
-	private Array<ShapeElement> collidedElements;
+	private ShapeElement collidedElement;
 	
 	public PlayerElement(PlayScreen screen, Sprite circle, int x, int y) {
 		this.screen = screen;
@@ -34,7 +34,7 @@ public class PlayerElement implements GameElement{
 			
 			// If the player is set to touched then the head of the SnakeElement follows the finger around the screen.
 			if(touched){
-				player.move(screen.touchX(), screen.touchY());
+				player.setPosition(screen.touchX(), screen.touchY());
 			}
 		}
 		else {
@@ -50,12 +50,12 @@ public class PlayerElement implements GameElement{
 		else screen.background.set(Color.BLACK);
 		
 		// Tests to see if the player element is colliding with one of the on screen enemies.
-		collidedElements = screen.enemies.testCollision(player.getBounds(0));
-		if(collidedElements != null) {
-			for(int i = 0; i < collidedElements.size; i++) {
-				player.grow();
-				screen.enemies.destroyElement(collidedElements.get(i));
-			}
+		collidedElement = screen.enemies.testCollision(player.getBounds(0));
+		while(collidedElement != null) {
+			screen.console.write("Player collision detected.");
+			player.grow();
+			screen.enemies.destroyElement(collidedElement);
+			collidedElement = screen.enemies.testCollision(player.getBounds(0));
 		}
 		
 		// Allows the players SnakeBody parts to follow along behind the head.

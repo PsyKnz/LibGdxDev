@@ -15,8 +15,8 @@ public class EnemyElement implements GameElement {
 	private Sprite[] shapes;
 	
 	// List of all enemy objects on the screen.
-	private Array<ShapeElement> enemies;
-	private Array<ShapeElement> collidedEnemies;
+	public Array<ShapeElement> elements;
+	public Array<ShapeElement> collidedElements;
 	
 	// Size of the enemy elements in in-game units.
 	private final int enemySize = 24;
@@ -30,8 +30,8 @@ public class EnemyElement implements GameElement {
 		this.screen = screen;
 		this.shapes = shapes;
 		
-		enemies = new Array<ShapeElement>();
-		collidedEnemies = new Array<ShapeElement>();
+		elements = new Array<ShapeElement>();
+		collidedElements = new Array<ShapeElement>();
 		
 		spawnTimer = MathUtils.random(maxSpawnTime - minSpawnTime) + minSpawnTime;
 	}
@@ -40,7 +40,7 @@ public class EnemyElement implements GameElement {
 	public void update(float delta) {
 		spawnTimer -= delta;
 		if(spawnTimer <= 0) {
-			enemies.add(new ShapeElement(screen, shapes[0], Color.GREEN,
+			elements.add(new ShapeElement(screen, shapes[0], Color.GREEN,
 			                             (int) (MathUtils.random(screen.arena.bounds.width - enemySize) + screen.arena.bounds.x + enemySize / 2),
 										 (int) (MathUtils.random(screen.arena.bounds.height - enemySize) + screen.arena.bounds.y + enemySize / 2),
 										 enemySize));
@@ -50,34 +50,30 @@ public class EnemyElement implements GameElement {
 		}
 		
 		// Update game logic for all on-screen enemies.
-		for(int i = 0; i < enemies.size; i++) {
-			enemies.get(i).update(delta);
+		for(int i = 0; i < elements.size; i++) {
+			elements.get(i).update(delta);
 		}
 	}
 	
 	@Override
 	public void draw(SpriteBatch batch) {
 		// Draws all on-screen enemies
-		for(int i = 0; i < enemies.size; i++) {
-			enemies.get(i).draw(batch);
+		for(int i = 0; i < elements.size; i++) {
+			elements.get(i).draw(batch);
 		}
 	}
 	
-	public Array<ShapeElement> testCollision(Rectangle bounds) {
-		collidedEnemies.clear();
-		
-		for(int i = 0; i < enemies.size; i++) {
-			if(enemies.get(i).getBounds().overlaps(bounds)) {
-			    collidedEnemies.add(enemies.get(i));
+	public ShapeElement testCollision(Rectangle bounds) {
+		for(int i = 0; i < elements.size; i++) {
+			if(elements.get(i).getBounds().overlaps(bounds)) {
+				return elements.get(i);
 			}
 		}
-		
-		if(collidedEnemies.size == 0) return null;
-		else return collidedEnemies;
+		return null;
 	}
 	
-	// 
+	// Removes the indicated element from the current array of enemy elements.
 	public void destroyElement(ShapeElement element) {
-		enemies.removeValue(element, false);
+		elements.removeValue(element, false);
 	}
 }

@@ -24,6 +24,8 @@ public class TextElement implements GameElement {
 	private int y;
 	private int drawX;
 	private int drawY;
+	private int hAlign;
+	private int vAlign;
 	
 	public TextElement(String text, BitmapFont font, int x, int y) {
 		this(text, font, x, y, LEFT, TOP);
@@ -36,6 +38,24 @@ public class TextElement implements GameElement {
 		this.x = x;
 		this.y = y;
 		align(hAlign, vAlign);
+	}
+
+	public void setY(int y) {
+		this.y = y;
+		align(hAlign, vAlign);
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+		align(hAlign, vAlign);
+	}
+
+	public int getX() {
+		return x;
 	}
 	
 	@Override
@@ -54,11 +74,13 @@ public class TextElement implements GameElement {
 	}
 	
 	// Sets the alignment of the text relative to its position.
-	public void align(int horizontalAlign, int verticalAlign) {
+	public void align(int hAlign, int vAlign) {
 		font.setScale(scale);
 		BitmapFont.TextBounds bounds = font.getBounds(text);
+		this.hAlign = hAlign;
+		this.vAlign = vAlign;
 		
-		switch(horizontalAlign) {
+		switch(hAlign) {
 			case LEFT:
 			drawX = x;
 			break;
@@ -70,7 +92,7 @@ public class TextElement implements GameElement {
 			break;
 		}
 		
-		switch(verticalAlign) {
+		switch(vAlign) {
 			case TOP:
 			drawY = y;
 			break;

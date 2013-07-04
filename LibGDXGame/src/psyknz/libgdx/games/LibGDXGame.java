@@ -15,9 +15,13 @@ public class LibGDXGame extends Game {
 	// Core AssetManager for the game.
 	public static AssetManager assets;
 	
+	public static ConsoleElement console;
+	
 	@Override
 	public void create() {
 		assets = new AssetManager();
+		
+		console = new ConsoleElement();
 		
 		// Loads the first screen to use in the game.
 		setScreen(new PlayScreen(this));

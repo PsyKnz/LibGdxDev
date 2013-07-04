@@ -32,7 +32,7 @@ public class TeleportingElement extends ShapeElement {
 		
 		// Once the timer reaches 0 the element teleports to a new location. EVENTUALLY NEEDS TO FIND A LOCATION WHICH DOESN'T COLLIDE.
 		if(teleportTimer <= 0) {
-			move(MathUtils.random(screen.visibleWidth), MathUtils.random(screen.visibleHeight));
+			setPosition(MathUtils.random(screen.visibleWidth), MathUtils.random(screen.visibleHeight));
 			teleportTimer = MathUtils.random() * variableTime + minimumTime;
 		}
 		
