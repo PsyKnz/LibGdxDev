@@ -68,7 +68,7 @@ public class SnakeElement extends ShapeElement {
 	
 	// Overrides the move method so that it interacts with the SnakeElements in its body.
 	@Override
-	public void move(int x, int y) {
+	public void move(float x, float y) {
 		super.move(x, y);
 		
 		// Moves the head of the snake to the position of the SnakeElement.

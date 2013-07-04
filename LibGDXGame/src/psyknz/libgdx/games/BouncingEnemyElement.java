@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 public class BouncingEnemyElement extends ShapeElement {
 	
 	// Reference to the PlayScreen this element is on.
-	@Override
 	protected PlayScreen screen;
 	
 	// Variables used to move the element around the screen.
