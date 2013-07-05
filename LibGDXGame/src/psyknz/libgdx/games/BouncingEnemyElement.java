@@ -24,11 +24,7 @@ public class BouncingEnemyElement extends ShapeElement {
 		// Determine how far the element should move on the x and y axis.
 		xMove = MathUtils.cos(angle) * speed * delta;
 		yMove = MathUtils.sin(angle) * speed * delta;
-		move(xMove, yMove);
-	}
-	
-	private void bounce(float collisionAngle) {
-		
+		setPosition(xMove, yMove);
 	}
 }
 

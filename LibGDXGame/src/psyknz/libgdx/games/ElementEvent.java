@@ -7,7 +7,7 @@ public class ElementEvent {
 	 * - COLLIDED: Should be used when the GameElement has collided with some other object on the current GameScreen. 
 	 * - TIMER_FINISHED: Should be used when a timer has run down to 0. */
 	public static enum EventType {
-		TOUCHED, COLLIDED, TIMER_FINISHED
+		TOUCHED, COLLIDED, FINISHED, TIMER_FINISHED
 	}
 	
 	// Reference to the element generating the event.

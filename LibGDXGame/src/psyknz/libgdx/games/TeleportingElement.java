@@ -15,9 +15,6 @@ public class TeleportingElement extends ShapeElement {
 	
 	// Timer to keep track of when the element should teleport.
 	private float teleportTimer;
-	
-	// The angle the sprite should be rotated by when drawn.
-	private float angle = 0;
     
 	public TeleportingElement(GameScreen screen, Sprite shape, Color color, int x, int y, int size) {
 		super(screen, shape, color, x, y, size);
@@ -32,7 +29,7 @@ public class TeleportingElement extends ShapeElement {
 		
 		// Once the timer reaches 0 the element teleports to a new location. EVENTUALLY NEEDS TO FIND A LOCATION WHICH DOESN'T COLLIDE.
 		if(teleportTimer <= 0) {
-			move(MathUtils.random(screen.visibleWidth), MathUtils.random(screen.visibleHeight));
+			setPosition(MathUtils.random(screen.visibleWidth), MathUtils.random(screen.visibleHeight));
 			teleportTimer = MathUtils.random() * variableTime + minimumTime;
 		}
 		

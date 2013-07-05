@@ -3,16 +3,18 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 public class SnakeElement extends ShapeElement {
+
 	// How much bigger the head should be relative to the body.
 	public static final float HEAD_SCALE = 1.8f;
 	
 	// List of the SnakeElements SnakeBody pieces.
-	private Array<SnakeBody> body;
+	public Array<SnakeBody> body;
 	
 	// Reference to the last piece of the snake, used for drawing and growing.
 	private SnakeBody tail;
@@ -44,10 +46,10 @@ public class SnakeElement extends ShapeElement {
 	@Override
 	public void draw(SpriteBatch batch) {
 		// Draws the outline of the last piece of the snake (which wont draw itself).
-		shape.setColor(color);
-		shape.setBounds(tail.bounds.x - OUTLINE_SIZE, tail.bounds.y - OUTLINE_SIZE, 
+		sprite.setColor(color);
+		sprite.setBounds(tail.bounds.x - OUTLINE_SIZE, tail.bounds.y - OUTLINE_SIZE, 
 						tail.bounds.width + OUTLINE_SIZE * 2, tail.bounds.height + OUTLINE_SIZE * 2);
-		shape.draw(batch);
+		sprite.draw(batch);
 		
 		// Loops through the entire SnakeBody drawing each piece from last to first.
 		for(int i = body.size - 1; i >= 0; i--) {
@@ -68,8 +70,8 @@ public class SnakeElement extends ShapeElement {
 	
 	// Overrides the move method so that it interacts with the SnakeElements in its body.
 	@Override
-	public void move(float x, float y) {
-		super.move(x, y);
+	public void setPosition(float x, float y) {
+		super.setPosition(x, y);
 		
 		// Moves the head of the snake to the position of the SnakeElement.
 		body.get(0).move(x, y);
@@ -120,15 +122,15 @@ public class SnakeElement extends ShapeElement {
 		public void draw(SpriteBatch batch) {
 			// If the SnakeBody has a parent SnakeBody its outline is drawn.
 			if(parent != null) {
-				shape.setColor(color);
-				shape.setBounds(parent.bounds.x - OUTLINE_SIZE, parent.bounds.y - OUTLINE_SIZE, parent.bounds.width + OUTLINE_SIZE * 2, parent.bounds.height + OUTLINE_SIZE + 2);
-				shape.draw(batch);
+				sprite.setColor(color);
+				sprite.setBounds(parent.bounds.x - OUTLINE_SIZE, parent.bounds.y - OUTLINE_SIZE, parent.bounds.width + OUTLINE_SIZE * 2, parent.bounds.height + OUTLINE_SIZE + 2);
+				sprite.draw(batch);
 			}
 			
 			// Draws the inside of the SnakeBody.
-			shape.setColor((color.r + screen.background.r) / 2, (color.g + screen.background.g) / 2, (color.b + screen.background.b) / 2, color.a);
-			shape.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-			shape.draw(batch);
+			sprite.setColor((color.r + screen.background.r) / 2, (color.g + screen.background.g) / 2, (color.b + screen.background.b) / 2, color.a);
+			sprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+			sprite.draw(batch);
 		}
 		
 		// Returns the x co-ordinate for the centre point of the SnakeBody part.
