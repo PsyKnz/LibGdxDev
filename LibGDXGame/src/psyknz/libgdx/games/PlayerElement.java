@@ -3,7 +3,6 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 
 public class PlayerElement implements GameElement{
 
@@ -52,7 +51,7 @@ public class PlayerElement implements GameElement{
 		// Tests to see if the player element is colliding with one of the on screen enemies.
 		collidedElement = screen.enemies.testCollision(player.getBounds(0));
 		while(collidedElement != null) {
-			screen.console.write("Player collision detected.");
+			screen.game.console.log("Player collision detected.");
 			player.grow();
 			screen.enemies.destroyElement(collidedElement);
 			collidedElement = screen.enemies.testCollision(player.getBounds(0));

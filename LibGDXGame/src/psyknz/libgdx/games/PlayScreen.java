@@ -4,11 +4,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class PlayScreen extends GameScreen implements ElementListener {
     
-	public BitmapFont font;
 	public Pixmap pix;
 	public Texture tex;
 	
@@ -16,14 +14,15 @@ public class PlayScreen extends GameScreen implements ElementListener {
 	public ShapeElement arena;
 	public PlayerElement player;
 	public EnemyElement enemies;
-	public ConsoleElement console;
 	
 	public PlayScreen(LibGDXGame game) {
 		super(game);
 	}
 	
 	@Override
-	public void positionElements() {
+	public void show() {
+		super.show();
+		
 		pix = new Pixmap(128, 64, Pixmap.Format.RGBA8888);
 		pix.setColor(1, 1, 1, 1);
 		
@@ -40,9 +39,6 @@ public class PlayScreen extends GameScreen implements ElementListener {
 		// Generate sprites which will be used GameElements
 		Sprite circle = new Sprite(tex, 0, 0, 32, 32);
 		Sprite dot = new Sprite(tex, 0, 33, 1, 1);
-		
-		font = new BitmapFont();
-		font.setColor(1, 1, 1, 1);
 		
 		arena = new ShapeElement(this, dot, Color.RED, game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, game.GAME_WIDTH - 20, game.GAME_HEIGHT - 20);
 		arena.filled = false;
@@ -62,7 +58,6 @@ public class PlayScreen extends GameScreen implements ElementListener {
 	public void dispose() {
 		super.dispose();
 		tex.dispose();
-		font.dispose();
 	}
 	
 	// Processes events from GameElements on this screen.

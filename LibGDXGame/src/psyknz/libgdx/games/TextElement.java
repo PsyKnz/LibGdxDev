@@ -19,19 +19,17 @@ public class TextElement implements GameElement {
 	private BitmapFont font;
 	private float scale;
 	
-	// Positional information.
-	private int x;
-	private int y;
-	private int drawX;
-	private int drawY;
-	private int hAlign;
-	private int vAlign;
+	// Positional and alignment information.
+	public float x, y;
+	private float xOffset, yOffset;
 	
-	public TextElement(String text, BitmapFont font, int x, int y) {
+	// By Default a new TextElement will be aligned so that the top left corner of its bounding box rests on its x, y co-ordinate.
+	public TextElement(String text, BitmapFont font, float x, float y) {
 		this(text, font, x, y, LEFT, TOP);
 	}
 	
-	public TextElement(String text, BitmapFont font, int x, int y, int hAlign, int vAlign) {
+	// Constructor allows for the TextElements alignment to be set.
+	public TextElement(String text, BitmapFont font, float x, float y, int hAlign, int vAlign) {
 		this.text = text;
 		this.font = font;
 		scale = font.getScaleX();
@@ -39,68 +37,56 @@ public class TextElement implements GameElement {
 		this.y = y;
 		align(hAlign, vAlign);
 	}
-
-	public void setY(int y) {
-		this.y = y;
-		align(hAlign, vAlign);
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-		align(hAlign, vAlign);
-	}
-
-	public int getX() {
-		return x;
-	}
 	
 	@Override
 	public void update(float delta) {
 		// INSERT CODE TO ANIMATE THE TEXT HERE.
 	}
 	
+	// Draws the TextElement at its current location.
 	@Override
 	public void draw(SpriteBatch batch) {
 	    font.setScale(scale);
-		font.draw(batch, text, drawX, drawY);
+		font.draw(batch, text, x - xOffset, y + yOffset);
 	}
 	
-	public String getText() {
-		return text.toString();
+	// Overloaded draw function draws the TextElement at the given location.
+	public void draw(SpriteBatch batch, float x, float y) {
+		font.setScale(scale);
+		font.draw(batch, text, x - xOffset, y + yOffset);
+	}
+	
+	// Returns the CharSequence this TextElement draws to the screen.
+	public CharSequence getText() {
+		return text;
 	}
 	
 	// Sets the alignment of the text relative to its position.
 	public void align(int hAlign, int vAlign) {
 		font.setScale(scale);
 		BitmapFont.TextBounds bounds = font.getBounds(text);
-		this.hAlign = hAlign;
-		this.vAlign = vAlign;
 		
 		switch(hAlign) {
 			case LEFT:
-			drawX = x;
+			xOffset = 0;
 			break;
 			case CENTER:
-			drawX = x - (int) bounds.width / 2;
+			xOffset = bounds.width / 2;
 			break;
 			case RIGHT:
-			drawX = x - (int) bounds.width;
+			xOffset = bounds.width;
 			break;
 		}
 		
 		switch(vAlign) {
 			case TOP:
-			drawY = y;
+			yOffset = 0;
 			break;
 			case CENTER:
-			drawY = y + (int) bounds.height / 2;
+			yOffset = bounds.height / 2;
 			break;
 			case BOTTOM:
-			drawY = y + (int) bounds.height;
+			yOffset = bounds.height;
 			break;
 		}
 	}

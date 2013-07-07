@@ -16,7 +16,6 @@ public class SplashScreen extends GameScreen {
 		super(game);
 	}
 	
-	@Override
 	public void positionElements() {
 		font = new BitmapFont();
 		

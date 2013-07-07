@@ -18,7 +18,6 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		super(game);
 	}
 	
-	@Override
 	public void positionElements() {
 		Pixmap pix = new Pixmap(2, 2, Pixmap.Format.RGBA4444);
 		pix.setColor(0, 0, 0, 1);

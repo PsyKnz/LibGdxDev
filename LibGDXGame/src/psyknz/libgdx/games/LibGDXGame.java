@@ -13,7 +13,7 @@ public class LibGDXGame extends Game {
 	public final int GAME_HEIGHT = 450;
 	
 	// Core AssetManager for the game.
-	public static AssetManager assets;
+	public AssetManager assets;
 	
 	// Reference to the games console. Has to be added to the GameElement array for a screen to be interactable with.
 	public ConsoleElement console;
@@ -25,12 +25,20 @@ public class LibGDXGame extends Game {
 		console = new ConsoleElement(this);
 		
 		// Loads the first screen to use in the game.
-		setScreen(new PlayScreen(this));
+		setScreen(new LoadingScreen(this));
 	}
 	
+	// Disposes of all core assets used by the game.
 	@Override
 	public void dispose() {
 		super.dispose();
 		assets.dispose();
+	}
+	
+	/* Returns the current screen being presented by the game. The Screen is cast to a GameScreen but all LibGDXGame objects should only
+	 * be presenting GameScreen extensions. */
+	@Override
+	public GameScreen getScreen() {
+		return (GameScreen) super.getScreen();
 	}
 }

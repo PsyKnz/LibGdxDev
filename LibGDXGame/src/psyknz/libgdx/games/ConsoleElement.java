@@ -12,9 +12,6 @@ public class ConsoleElement implements GameElement {
 	// Font used to draw text to the console.
 	private BitmapFont font;
 	
-	// Identifier for the screen.
-	private TextElement screenLabel;
-	
 	// The log of events which have been written to the screen.
 	private Array<TextElement> log;
 	
@@ -22,8 +19,7 @@ public class ConsoleElement implements GameElement {
 	private int maxLogLength = 100;
 	
 	// Variables for tracking the current fps.
-	private int fps = 0;
-	private float deltaCount = 0;
+	private float fps, deltaCount = 0;
 	private int updateCount = 0;
 	private String fpsLabel = "FPS: ";
 	
@@ -39,11 +35,11 @@ public class ConsoleElement implements GameElement {
 	}
 	
 	public void update(float delta) {
-		// Updates the current fps.
+		// Updates the current fps by looking at how many times render has been called in the last second.
 		updateCount += 1;
 		deltaCount += delta;
 		if(deltaCount >= 1) {
-			fps = updateCount;
+			fps = updateCount / deltaCount;
 			deltaCount = 0;
 			updateCount = 0;
 		}
@@ -52,21 +48,21 @@ public class ConsoleElement implements GameElement {
 	// Draws all elements which are part of the console.
 	public void draw(SpriteBatch batch) {
 		if(visible) {
-			font.draw(batch, fpsLabel + fps, game.getScreen().leftOffset, screen.visibleHeight - screen.bottomOffset);
+			// Draws the current FPS to the screen.
+			font.draw(batch, fpsLabel + fps, game.getScreen().leftOffset, game.getScreen().visibleHeight - game.getScreen().bottomOffset);
 			
-			screenLabel.draw(batch);
+			// Draws the GameScreens ID to the screen.
+			font.draw(batch, game.getScreen().toString(), game.getScreen().leftOffset, 16 - game.getScreen().bottomOffset);
 			
+			// Draws all logged messages to the screen, starting with the latest at the bottom of the screen.
 		    for(int i = 0; i < log.size; i++) {
-			    log.get(i).draw(batch);
+			    log.get(i).draw(batch, game.getScreen().visibleWidth + game.getScreen().leftOffset, 0 - game.getScreen().bottomOffset + i * 18 + 4);
 		    }
 		}
 	}
 	
 	// Adds the given message to the log.
-	public void write(String msg) {
-		for(int i = 0; i < log.size; i++) {
-			log.get(i).setY(log.get(i).getY() + 16);
-		}
-		log.insert(0, new TextElement(msg, font, screen.visibleWidth + screen.leftOffset, 0 - screen.bottomOffset, TextElement.RIGHT, TextElement.BOTTOM));
+	public void log(String msg) {		
+		log.insert(0, new TextElement(msg + " <<", font, 0, 0, TextElement.RIGHT, TextElement.BOTTOM));
 	}
 }
