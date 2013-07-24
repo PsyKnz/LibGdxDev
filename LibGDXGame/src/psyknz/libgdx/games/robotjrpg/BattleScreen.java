@@ -5,76 +5,44 @@ import psyknz.libgdx.games.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-public class BattleScreen extends GameScreen {
-	
-	// The element controlling the current game state.
-	private BattleScreenElement battleController;
+public class BattleScreen extends GameScreen implements GameElement {
 	
 	// The BattleGroups of player and enemy units.
-	private BattleGroup playerGroup, enemyGroup;
+	public BattleGroup playerGroup, enemyGroup;
 	
 	// List of units which are currently in line to take their turn.
-	private Array<UnitEntity> activeUnits;
+	public Array<UnitEntity> activeUnits;
+	
+	// List of all effects which currently need to be resolved.
+	public Array<GameElement> effectList;
 	
 	public BattleScreen(LibGDXGame game) {
 		super(game);
 		
-		playerGroup = new BattleGroup();
-		enemyGroup = new BattleGroup();
+		playerGroup = new BattleGroup(this);
+		enemyGroup = new BattleGroup(this);
 		
 		activeUnits = new Array<UnitEntity>();
+		effectList = new Array<GameElement>();
 		
-		battleController = new BattleScreenElement();
-		elements.add(battleController);
+		elements.add(this);
 	}
 	
-	// Helper GameElement which manages the BattleScreens state.
-	private class BattleScreenElement implements GameElement {
+	@Override
+	public void update(float delta) {
+		if(effectList.size > 0) {}
+		else if(activeUnits.size > 0) {}
 		
-		public void update(float delta) {
-			/* If there is currently no activeUnits waiting to take their turn then all units turnTimers ticks down until at least one
-			 * units turnTimer reaches 0. */
-			if(activeUnits.size <= 0) {
-				
-				// Loops through the players units.
-				for(int i = 0; i < playerGroup.getSize(); i++) {
-					playerGroup.getUnit(i).turnTimer -= playerGroup.getUnit(i).speed * delta;
-					
-					// If the units timer reaches 0 it is inserted into the active units list in order of lowest turnTimers.
-					if(playerGroup.getUnit(i).turnTimer <= 0) {
-						for(int j = 0; j < activeUnits.size; j++) {
-							if (playerGroup.getUnit(i).turnTimer < activeUnits.get(j).turnTimer) {
-								activeUnits.insert(j, playerGroup.getUnit(i));
-								break;
-							}
-						}
-						activeUnits.add(playerGroup.getUnit(i));
-					}
-				}
-				
-				// Loops through the enemy units.
-				for(int i = 0; i < enemyGroup.getSize(); i++) {
-					enemyGroup.getUnit(i).turnTimer -= enemyGroup.getUnit(i).speed * delta;
-					
-					// If the units timer reaches 0 it is inserted into the active units list in order of lowest turnTimers.
-					if(enemyGroup.getUnit(i).turnTimer <= 0) {
-						for(int j = 0; j < activeUnits.size; j++) {
-							if (enemyGroup.getUnit(i).turnTimer < activeUnits.get(j).turnTimer) {
-								activeUnits.insert(j, enemyGroup.getUnit(i));
-								break;
-							}
-						}
-						activeUnits.add(enemyGroup.getUnit(i));
-					}
-				}
-			}
+		// If there are currently no effects or units pending processing then unit turnTimers tick down.
+		else {
+			playerGroup.update(delta);
+			enemyGroup.update(delta);
 			
-			// If there is currently an activeUnit then shit happens.
-			else {
-				
-			}
+			// If more than one unit is added to the activeUnit list during the same update call they are sorted.
+			if(activeUnits.size > 1) {}
 		}
-		
-		public void draw(SpriteBatch batch) {}
 	}
+	
+	@Override
+	public void draw(SpriteBatch batch) {}
 }
