@@ -5,7 +5,7 @@ import psyknz.libgdx.games.GameElement;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-public class UnitEntity implements GameElement {
+public class BattleUnit implements GameElement {
 	
 	// Maximum number of LoadoutEntity's a UnitEntity can hold.
 	public static final int MAX_LOADOUT = 12;
@@ -29,7 +29,7 @@ public class UnitEntity implements GameElement {
 	// The current phase the turn is in.
 	private int currentPhase = UNIT_START;
 
-	public UnitEntity() {
+	public BattleUnit() {
 		loadout = new Array<LoadoutEntity>(MAX_LOADOUT);
 	}
 	

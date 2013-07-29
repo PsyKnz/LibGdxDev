@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class ButtonElement implements GameElement {
 	
+	// Reference to the GameScreen this button is attached to.
 	private GameScreen screen;
 	
 	// Reference to the listener this button reports to and the id the object passes on and draws onto itself.

@@ -11,18 +11,17 @@ public class BattleGroup implements GameElement {
 	private BattleScreen screen;
 	
 	// List of all units in the BattleGroup and a reference to the unit currently being processed.
-	private Array<UnitEntity> units;
-	private UnitEntity currentUnit;
+	private Array<BattleUnit> units;
+	private BattleUnit currentUnit;
 	
 	public BattleGroup(BattleScreen screen) {
 		this.screen = screen;
 		
-		units = new Array<UnitEntity>();
+		units = new Array<BattleUnit>();
 	}
 	
 	@Override
 	public void update(float delta) {
-		
 		// Goes through each unit and ticks down their timer.
 		for(int i = 0; i < units.size; i++) {
 			currentUnit = units.get(i);
@@ -42,7 +41,7 @@ public class BattleGroup implements GameElement {
 	}
 	
 	// Returns the UnitEntity in this BattleGroup at the given index.
-	public UnitEntity getUnit(int index) {
+	public BattleUnit getUnit(int index) {
 		return units.get(index);
 	}
 }
