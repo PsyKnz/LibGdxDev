@@ -163,6 +163,26 @@ public abstract class GameScreen implements Screen {
 		batch.dispose();
 	}
 	
+	// Returns the physical width of the GameScreen in in-game units.
+	public int getVisibleWidth() {
+		return visibleWidth;
+	}
+	
+	// Returns the physical height of the GameScreen in in-game units.
+	public int getVisibleHeight() {
+		return visibleHeight;
+	}
+	
+	// Returns the width of the left hand margin.
+	public int getLeftOffset() {
+		return leftOffset;
+	}
+	
+	// Returns the height of the margin along the bottom of the screen.
+	public int getBottomOffset() {
+		return bottomOffset;
+	}
+	
 	// Returns whether or not the screen is currently being touched.
 	public boolean isTouched() {
 		return Gdx.input.isTouched();

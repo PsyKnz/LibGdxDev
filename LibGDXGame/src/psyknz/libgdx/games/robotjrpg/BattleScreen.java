@@ -2,6 +2,7 @@ package psyknz.libgdx.games.robotjrpg;
 
 import psyknz.libgdx.games.*;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,6 +25,7 @@ public class BattleScreen extends GameScreen implements GameElement, ElementList
 	
 	public BattleScreen(LibGDXGame game) {
 		super(game);
+		background = Color.WHITE;
 		
 		// Initialises the players party and the enemy party.
 		playerGroup = new BattleGroup(this);
@@ -37,20 +39,23 @@ public class BattleScreen extends GameScreen implements GameElement, ElementList
 		elements.add(this);
 		
 		// Loads the sprites which will be used on this screen.
-		Sprite buttonSprite = new Sprite((Sprite) game.assets.get("data/ShapeImageTemplate.png"), 0, 64, 64, 64);
+		Sprite buttonSprite = new Sprite((Texture) game.assets.get("data/ShapeImageTemplate.png"), 0, 64, 64, 64);
 		
 		// Sets the style preferences for buttons which will be presented on this screen.
 		BitmapFont font = new BitmapFont();
-		ButtonElement.ButtonStyle style = new ButtonElement.ButtonStyle(Color.CYAN, Color.BLUE, Color.GRAY, 64, 64, font);
+		ButtonElement.ButtonStyle style = new ButtonElement.ButtonStyle(this, buttonSprite, 64, 64, font);
 		
 		// Creates a pause button and adds it to the list of GameElements.
-		pause = new ButtonElement(this, this, buttonSprite, style, "Pause.", 0, 0);
+		pause = new ButtonElement(this, style, 0, 0);
+		pause.setDetails("Pause.", "Touching this pauses the game and brings up a menu.");
 		elements.add(pause);
 		
 		// Creates a button to access the console, disables its functionality, and adds it to the list of GameElements.
-		console = new ButtonElement(this, this, buttonSprite, style, "Console.", 0, 0);
+		console = new ButtonElement(this, style, 0, 0);
 		console.disabled = true;
+		console.setDetails("Console.", "Touching this brings up the console provided that console access is enabled.");
 		elements.add(console);
+		
 	}
 	
 	/* The resize method is overrided to allow for GUI elements attached to the edges of the screen to have their x and y adjusted
@@ -60,10 +65,12 @@ public class BattleScreen extends GameScreen implements GameElement, ElementList
 		super.resize(width, height);
 		
 		// The pause button is placed on the bottom left corner of the screen.
-		pause.setPos(0 - leftOffset, 0 - bottomOffset);
+		pause.setX(0 - leftOffset);
+		pause.setY(0 - bottomOffset);
 		
 		// The console button is placed on the bottom right corner of the screen.
-		console.setPos(visibleWidth + leftOffset, 0 - bottomOffset);
+		console.setX(visibleWidth + leftOffset - console.getStyle().width);
+		console.setY(0 - bottomOffset);
 	}
 	
 	@Override
@@ -80,7 +87,7 @@ public class BattleScreen extends GameScreen implements GameElement, ElementList
 		}
 		
 		// If there are currently no effects or units pending processing then unit turnTimers tick down.
-		else {
+		/*else {
 			playerGroup.update(delta);
 			enemyGroup.update(delta);
 			
@@ -101,7 +108,7 @@ public class BattleScreen extends GameScreen implements GameElement, ElementList
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	@Override

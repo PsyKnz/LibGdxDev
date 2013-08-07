@@ -3,7 +3,7 @@ package psyknz.libgdx.games;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-public class TextElement implements GameElement {
+public class TextElement extends BoundedElement {
     
 	// Constants for aligning the text.
 	public static final int LEFT = 0;
@@ -17,38 +17,23 @@ public class TextElement implements GameElement {
 	
 	// Font and style information, should be set on the font before being passed to the constructor.
 	private BitmapFont font;
-	private float scale;
 	
 	// Positional and alignment information.
-	public float x, y;
-	private float xOffset, yOffset, wrapWidth;
-	private boolean wrapped;
+	private int hAlign, vAlign;
 	
 	/* By Default a new TextElement will be aligned so that the top left corner of its bounding box rests on its x, y co-ordinate.
 	 *  It will also not wrap the text. */
 	public TextElement(String text, BitmapFont font, float x, float y) {
-		this(text, font, x, y, false, 0);
-	}
-	
-	// This constructor should be used to create wrapped text.
-	public TextElement(String text, BitmapFont font, float x, float y, boolean wrapped, float wrapWidth) {
-		this(text, font, x, y, wrapped, wrapWidth, LEFT, TOP);
-	}
-	
-	// Constructor allows for the TextElements alignment to be set.
-	public TextElement(String text, BitmapFont font, float x, float y, int hAlign, int vAlign) {
-		this(text, font, x, y, false, 0, hAlign, vAlign);
+		this(text, font, x, y, LEFT, TOP);
 	}
 	
 	// Constructor for the TextElement which allows for the alignment to be set as well as whether or not the text should be wrapped.
-	public TextElement(String text, BitmapFont font, float x, float y, boolean wrapped, float wrapWidth, int hAlign, int vAlign) {
+	public TextElement(String text, BitmapFont font, float x, float y, int hAlign, int vAlign) {
+		super(x, y, font.getBounds(text).width, font.getBounds(text).height);
+		
 		this.text = text;
 		this.font = font;
-		scale = font.getScaleX();
-		this.x = x;
-		this.y = y;
-		this.wrapped = wrapped;
-		this.wrapWidth = wrapWidth;
+		
 		align(hAlign, vAlign);
 	}
 	
@@ -58,16 +43,12 @@ public class TextElement implements GameElement {
 	// Draws the TextElement at its current location.
 	@Override
 	public void draw(SpriteBatch batch) {
-	    font.setScale(scale);
-	    if(wrapped) font.drawWrapped(batch, text, x - xOffset, y + yOffset, wrapWidth);
-	    else font.draw(batch, text, x - xOffset, y + yOffset);
+		font.drawWrapped(batch, text, bounds.x - xOrig, bounds.y + yOrig, bounds.width);
 	}
 	
 	// Overloaded draw function draws the TextElement at the given location.
 	public void draw(SpriteBatch batch, float x, float y) {
-		font.setScale(scale);
-		if(wrapped) font.drawWrapped(batch, text, x - xOffset, y + yOffset, wrapWidth);
-	    else font.draw(batch, text, x - xOffset, y + yOffset);
+	    font.drawWrapped(batch, text, x - xOrig, y + yOrig, bounds.width);
 	}
 	
 	// Returns the CharSequence this TextElement draws to the screen.
@@ -75,37 +56,35 @@ public class TextElement implements GameElement {
 		return text;
 	}
 	
-	// Sets the alignment of the text relative to its position.
 	public void align(int hAlign, int vAlign) {
-		font.setScale(scale);
-		BitmapFont.TextBounds bounds;
-		if(wrapped) bounds = font.getWrappedBounds(text, wrapWidth);
-		else bounds = font.getBounds(text);
+		this.hAlign = hAlign;
+		this.vAlign = vAlign;
 		
-		// Adjusts the xOffset based on the hAlign parameter.
+		// Aligns the text along the x axis.
 		switch(hAlign) {
-			case LEFT:
-			xOffset = 0;
+			case LEFT: xOrig = 0;
 			break;
-			case CENTER:
-			xOffset = bounds.width / 2;
+			case CENTER: xOrig = bounds.width / 2;
 			break;
-			case RIGHT:
-			xOffset = bounds.width;
-			break;
+			case RIGHT: xOrig = bounds.width;
 		}
 		
-		//Adjusts the yOffset based on the vAlign parameter.		
+		// Aligns the text along the y axis.
 		switch(vAlign) {
-			case TOP:
-			yOffset = 0;
+			case TOP: yOrig = 0;
 			break;
-			case CENTER:
-			yOffset = bounds.height / 2;
+			case CENTER: yOrig = bounds.height / 2;
 			break;
-			case BOTTOM:
-			yOffset = bounds.height;
+			case BOTTOM: yOrig = bounds.height;
 			break;
 		}
+	}
+	
+	// Sets the width of the TextElement and re-aligns its origin. If the width is <= 0 then the text is unwrapped.
+	public void setWrapWidth(float wrapWidth) {
+		if(wrapWidth <= 0) bounds.width = font.getBounds(text).width;
+		else bounds.width = wrapWidth;
+		bounds.height = font.getWrappedBounds(text, bounds.width).height;
+		align(hAlign, vAlign);
 	}
 }
