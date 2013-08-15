@@ -36,6 +36,8 @@ public class ButtonElement extends BoundedElement {
 	
 	public ButtonElement(ElementListener listener, ButtonStyle style, float x, float y) {
 		super(0, 0, style.width, style.height);
+		xOrig = 0;
+		yOrig = 0;
 		setX(x);
 		setY(y);
 		
