@@ -24,17 +24,19 @@ public class TextElement extends BoundedElement {
 	/* By Default a new TextElement will be aligned so that the top left corner of its bounding box rests on its x, y co-ordinate.
 	 *  It will also not wrap the text. */
 	public TextElement(String text, BitmapFont font, float x, float y) {
-		this(text, font, x, y, LEFT, TOP);
+		this(text, font, x, y, LEFT, BOTTOM);
 	}
 	
 	// Constructor for the TextElement which allows for the alignment to be set as well as whether or not the text should be wrapped.
 	public TextElement(String text, BitmapFont font, float x, float y, int hAlign, int vAlign) {
-		super(x, y, font.getBounds(text).width, font.getBounds(text).height);
+		super(0, 0, font.getBounds(text).width, font.getBounds(text).height);
 		
 		this.text = text;
 		this.font = font;
 		
 		align(hAlign, vAlign);
+		setX(x);
+		setY(y);
 	}
 	
 	@Override
@@ -43,12 +45,12 @@ public class TextElement extends BoundedElement {
 	// Draws the TextElement at its current location.
 	@Override
 	public void draw(SpriteBatch batch) {
-		font.drawWrapped(batch, text, bounds.x - xOrig, bounds.y + yOrig, bounds.width);
+		font.drawWrapped(batch, text, bounds.x, bounds.y + bounds.height, bounds.width);
 	}
 	
 	// Overloaded draw function draws the TextElement at the given location.
 	public void draw(SpriteBatch batch, float x, float y) {
-	    font.drawWrapped(batch, text, x - xOrig, y + yOrig, bounds.width);
+	    font.drawWrapped(batch, text, x - xOrig, y - yOrig + bounds.height, bounds.width);
 	}
 	
 	// Returns the CharSequence this TextElement draws to the screen.
@@ -71,11 +73,11 @@ public class TextElement extends BoundedElement {
 		
 		// Aligns the text along the y axis.
 		switch(vAlign) {
-			case TOP: yOrig = 0;
+			case TOP: yOrig = bounds.height;
 			break;
 			case CENTER: yOrig = bounds.height / 2;
 			break;
-			case BOTTOM: yOrig = bounds.height;
+			case BOTTOM: yOrig = 0;
 			break;
 		}
 	}

@@ -22,7 +22,7 @@ public abstract class GameScreen implements Screen {
 	/* Reference to the core GameElement and overriding GameElement which will generally be a menu of some form. While there is an
 	 * overriding element present it will block the core GameElements update(float) function while allowing it to draw itself. */
 	protected Array<GameElement> elements;
-	protected GameElement overridingElement = null;
+	public GameElement overridingElement = null;
 	
 	// Member objects used to draw the screen.
 	protected int resizeConstraint = GameScreen.CONSTRAIN_MAX;
@@ -98,8 +98,8 @@ public abstract class GameScreen implements Screen {
 		
 		// Sets the camera to fill the screen and shifts it as far left and down as necessary to center the camera.
 		camera.setToOrtho(false, visibleWidth, visibleHeight);
-		leftOffset = (visibleWidth - game.GAME_WIDTH) / 2;
-		bottomOffset = (visibleHeight - game.GAME_HEIGHT) / 2;
+		leftOffset = (visibleWidth - game.width) / 2;
+		bottomOffset = (visibleHeight - game.height) / 2;
 		camera.position.x -= leftOffset;
 		camera.position.y -= bottomOffset;
 	}
@@ -110,25 +110,25 @@ public abstract class GameScreen implements Screen {
 		switch(constrain) {
 			// Sets the camera so that the entire internal game width is visible.
 			case CONSTRAIN_WIDTH:
-			    visibleWidth = game.GAME_WIDTH;
-			    visibleHeight = game.GAME_WIDTH * height / width;
+			    visibleWidth = game.width;
+			    visibleHeight = game.width * height / width;
 			    break;
 
 			// Sets the camera so that the entire internal game height is visible.
 			case CONSTRAIN_HEIGHT:
-			    visibleHeight = game.GAME_HEIGHT;
-			    visibleWidth = game.GAME_HEIGHT * width / height;
+			    visibleHeight = game.height;
+			    visibleWidth = game.height * width / height;
 			    break;
 
 			// Sets the camera so that the entire internal game area is visible.
 			case CONSTRAIN_MAX:
-			    if(game.GAME_WIDTH / game.GAME_HEIGHT >= width / height) resize(width, height, CONSTRAIN_WIDTH);
+			    if(game.width / game.height >= width / height) resize(width, height, CONSTRAIN_WIDTH);
 				else resize(width, height, CONSTRAIN_HEIGHT);
 			    break;
 
 			// Sets the camera so that the viewport is entirely filled.
 			case CONSTRAIN_MIN:
-			    if(game.GAME_WIDTH / game.GAME_HEIGHT >= width / height) resize(width, height, CONSTRAIN_HEIGHT);
+			    if(game.width / game.height >= width / height) resize(width, height, CONSTRAIN_HEIGHT);
 				else resize(width, height, CONSTRAIN_WIDTH);
 			    break;
 		}
@@ -183,18 +183,23 @@ public abstract class GameScreen implements Screen {
 		return bottomOffset;
 	}
 	
+	// Returns a reference to the LibGDXGame this screen is being processed by.
+	public LibGDXGame getGame() {
+		return game;
+	}
+	
 	// Returns whether or not the screen is currently being touched.
 	public boolean isTouched() {
 		return Gdx.input.isTouched();
 	}
 	
 	// Returns the x co-ordinate of where the screen is being touched in in-game units.
-	public int touchX() {
+	public float touchX() {
 		return Gdx.input.getX() * visibleWidth / Gdx.graphics.getWidth() + leftOffset;
 	}
 	
 	// Returns the y co-ordinate of where the screen is being touched in in-game units.
-	public int touchY() {
+	public float touchY() {
 		return visibleHeight - Gdx.input.getY() * visibleHeight / Gdx.graphics.getHeight() - bottomOffset;
 	}
 	

@@ -6,14 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Rectangle;
 
 public class ButtonElement extends BoundedElement {
-	
-	// Default length of time a button needs to be held down for its tooltip to be displayed.
-	public static final float TOOLTIP_DELAY = 0.75f;
-	
-	// Reference to the ElementListener this ButtonElement reports to.
+		// Reference to the ElementListener this ButtonElement reports to.
 	private ElementListener listener;
 	
 	// The Sprite being used to draw this button and the decal yo draw over it.
@@ -21,7 +16,6 @@ public class ButtonElement extends BoundedElement {
 	
 	// The ButtonElement's label and its tooltip. Displayed while the button is selected.
 	private TextElement label = null;
-	private TextElement tooltip = null;
 	
 	// The current preferences for how the button should be displayed on screen.
 	private ButtonStyle style;
@@ -31,15 +25,8 @@ public class ButtonElement extends BoundedElement {
 	public boolean disabled = false;
 	private boolean selected = false;
 	
-	// How long the ButtonElement has to be held for before the tooltip is displayed
-	private float tooltipTimer = TOOLTIP_DELAY;
-	
 	public ButtonElement(ElementListener listener, ButtonStyle style, float x, float y) {
-		super(0, 0, style.width, style.height);
-		xOrig = 0;
-		yOrig = 0;
-		setX(x);
-		setY(y);
+		super(x, y, style.width, style.height);
 		
 		this.listener = listener;
 		this.style = style;
@@ -53,11 +40,9 @@ public class ButtonElement extends BoundedElement {
 			if(style.screen.isTouched()) {
 				if(bounds.contains(style.screen.touchX(), style.screen.touchY())) {
 					selected = true;
-					tooltipTimer -= delta;
 				}
 				else {
 					selected = false;
-					tooltipTimer = TOOLTIP_DELAY;
 				}
 			}
 			
@@ -67,7 +52,6 @@ public class ButtonElement extends BoundedElement {
 			 *  the listener is told nothing. */
 			else if(selected) {
 				selected = false;
-				tooltipTimer = TOOLTIP_DELAY;
 				if(!disabled) listener.event(new ElementEvent(this, ElementEvent.EventType.TOUCHED));
 			}
 		}
@@ -76,6 +60,7 @@ public class ButtonElement extends BoundedElement {
 	@Override
 	public void draw(SpriteBatch batch) {
 		if(visible) {
+			
 			// If the button is currently visible then its sprite is aligned with the buttons position.
 			style.sprite.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
 			
@@ -94,68 +79,39 @@ public class ButtonElement extends BoundedElement {
 			/* If the ButtonElement is currently selected then its label is drawn to the screen as well as the buttons tooltip provided
 			 *  it currently has one and the ButtonElement has been held down for long enough. */
 			if(selected) {
-				if(tooltipTimer <= 0 && tooltip != null) {
-					tooltip.draw(batch);
-					if(label != null) label.draw(batch, tooltip.getBounds().x, tooltip.getBounds().y + tooltip.getBounds().height);
-				}
-				else if(label != null) {
-					label.draw(batch, bounds.x + bounds.width / 2, bounds.y + bounds.height);
+				if(label != null) {
+					if(style.borderSprite != null) {
+						style.borderSprite.setBounds(label.getBounds().x - style.labelBorder, label.getBounds().y - (style.labelBorder + 1), label.getBounds().width + style.labelBorder * 2, label.getBounds().height + style.labelBorder * 2);
+						style.borderSprite.draw(batch);
+					}
+					label.draw(batch);
 				}
 			}
 		}
 	}
 	
-	// Sets the x co-ordinate of the button and moves its tooltip appropriately if it has one.
+	// Sets the ButtonElement's label which is displayed when the button is hovered over.
+	public void setLabel(String label) {
+		
+		// If the label is blank or null then the label becomes null.
+		if(label != null && label != "") {
+			this.label = new TextElement(label, style.font, bounds.x + bounds.width / 2, bounds.y + bounds.height + style.labelSpace, TextElement.CENTER, TextElement.BOTTOM);
+		}
+		else this.label = null;
+	}
+	
+	// Overrides setX to allow for repositioning the label.
 	@Override
 	public void setX(float x) {
 		super.setX(x);
-		if(tooltip != null) {
-			tooltip.setX(bounds.x + bounds.width / 2);
-			
-			// If the tooltip would vanish off the right hand side of the screen it is set to touch the right hand edge.
-			if(tooltip.getBounds().x + tooltip.getBounds().width > style.screen.getVisibleWidth() - style.screen.getLeftOffset())
-				tooltip.setX(style.screen.getVisibleWidth() - style.screen.getLeftOffset() - tooltip.xOrig);
-				
-			// If the tooltip would vanish off the left hand side of the screen it is set to touch the left hand edge.
-			if(tooltip.getBounds().x < 0 - style.screen.getLeftOffset()) 
-				tooltip.setX(0 - style.screen.getLeftOffset() + tooltip.xOrig);
-		}
+		if(label != null) label.setX(bounds.x + bounds.width / 2);
 	}
 	
-	// Sets the y co-ordinate of the button and moves its tooltip appropriately if it has one.
+	// Overrides setY ti allow for repositioning the label.
 	@Override
 	public void setY(float y) {
 		super.setY(y);
-		if(tooltip != null) {
-			tooltip.setY(bounds.y + bounds.height);
-			
-			// If the tooltip would vanish off the bottom of the screen it is set to touch the bottom.
-			if(tooltip.getBounds().y < 0 - style.screen.getBottomOffset())
-				tooltip.setY(0 - style.screen.getBottomOffset() + tooltip.yOrig);
-				
-			// If the tooltip would vanish off the top of the screen it is set to touch the top.
-			if(tooltip.getBounds().y + tooltip.getBounds().height > style.screen.getVisibleHeight() - style.screen.getBottomOffset())
-				tooltip.setY(style.screen.getVisibleHeight() - style.screen.getBottomOffset() - tooltip.getBounds().height + tooltip.yOrig);
-		}
-	}
-	
-	// Sets the tooltip to display for this button while it is selected.
-	public void setDetails(String label, String tooltip) {
-		
-		// Sets the tooltip for the button and resets the buttons position so that the tooltip is positioned correctly.
-		if(tooltip != null && tooltip != "") {
-		    this.tooltip = new TextElement(tooltip, style.font, 0, 0, TextElement.CENTER, TextElement.BOTTOM);
-		    this.tooltip.setWrapWidth(style.tooltipWidth);
-			setX(getX());
-			setY(getY());
-		}
-		else this.tooltip = null;
-		
-		// Sets the label for the button.
-		if(label != null && label != "") {
-			this.label = new TextElement(label, style.font, 0, 0, TextElement.CENTER, TextElement.BOTTOM);
-		}
-		else this.label = null;
+		if(label != null) label.setY(bounds.y + bounds.height + style.labelSpace);
 	}
 	
 	// Returns the ButtonStyle used when generating this button.
@@ -163,10 +119,10 @@ public class ButtonElement extends BoundedElement {
 		return style;
 	}
 	
-	// A ButtonStyle object stores a set of style properties which are shared across a number of buttons.
+	// A ButtonStyle object spores a set of style properties which are shared across a number of buttons.
 	public static class ButtonStyle {
 		
-		// Reference to the GameScreen buttons using this style are being drawn on.
+		// Reference to the GameScreen ButtonElements using this ButtonStyle are attached to.
 		private GameScreen screen;
 		
 		// Reference to the sprite used to draw the button.
@@ -183,14 +139,19 @@ public class ButtonElement extends BoundedElement {
 		// The font to use when drawing tool tips. Cannot be altered once set.
 		private BitmapFont font;
 		
+		// How much distance the label should have from the button and its background.
+		public float labelSpace = 5;
+		public float labelBorder = 3;
+		
+		// Sprite used to draw the labels border.
+		public Sprite borderSprite = null;
+		
 		public ButtonStyle(GameScreen screen, Sprite sprite, float width, float height, BitmapFont font) {
 			this.screen = screen;
 			this.sprite = sprite;
 			this.width = width;
 			this.height = height;
 			this.font = font;
-			
-			tooltipWidth = width * 3;
 		}
 	}
 }
