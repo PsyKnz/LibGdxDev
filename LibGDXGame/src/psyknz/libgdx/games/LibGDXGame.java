@@ -8,9 +8,10 @@ import com.badlogic.gdx.assets.AssetManager;
  * the games AssetManager. To actually run the game you call this objects setScreen() method and set it
  * to an instance of a GameScreen object which requires this be passed as an argument. */
 public class LibGDXGame extends Game {
+ 
 	// Width and height of the game screen in in-game units.
-	public final int GAME_WIDTH = 800;
-	public final int GAME_HEIGHT = 450;
+	public final int width = 800;
+	public final int height = 450;
 	
 	// Core AssetManager for the game.
 	public AssetManager assets;
@@ -24,7 +25,7 @@ public class LibGDXGame extends Game {
 		
 		console = new ConsoleElement(this);
 		
-		// Loads the first screen to use in the game.
+		// Loads the first screen to use in the game, the LoadingScreen.
 		setScreen(new LoadingScreen(this));
 	}
 	
@@ -36,7 +37,7 @@ public class LibGDXGame extends Game {
 	}
 	
 	/* Returns the current screen being presented by the game. The Screen is cast to a GameScreen but all LibGDXGame objects should only
-	 * be presenting GameScreen extensions. */
+	 * be presenting objects derived from GameScreen. */
 	@Override
 	public GameScreen getScreen() {
 		return (GameScreen) super.getScreen();

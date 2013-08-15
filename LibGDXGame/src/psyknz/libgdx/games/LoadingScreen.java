@@ -62,7 +62,7 @@ public class LoadingScreen extends GameScreen {
 		 * been forcefully loaded prior to creation of the GameAssetLoader. */
 		@Override
 		public void draw(SpriteBatch batch) {
-			font.draw(batch, str + progress, game.GAME_WIDTH - xOffset, game.GAME_HEIGHT + yOffset);
+			font.draw(batch, str + progress, game.width - xOffset, game.height + yOffset);
 		}
 	}
 }

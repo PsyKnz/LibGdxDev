@@ -40,7 +40,7 @@ public class MenuScreen extends GameScreen implements ElementListener {
 		
 		ButtonElement.ButtonPrefs prefs = new ButtonElement.ButtonPrefs(100, 50, activeTex, inactiveTex, selectedTex, font);
 		font.setScale(2.0f);
-		playButton = new ButtonElement("Play", game.GAME_WIDTH / 2, game.GAME_HEIGHT / 2, prefs, this, this);
+		playButton = new ButtonElement("Play", game.width / 2, game.height / 2, prefs, this, this);
 		elements.add(playButton);
 		
 		font.setScale(1.0f);

@@ -7,14 +7,18 @@ public abstract class BoundedElement implements GameElement {
 	// The bounding box to be used for the BoundedElement.
 	protected Rectangle bounds;
 	
-	// The point inside of the bounding box used to take co-ordinates.
-	public float xOrig, yOrig;
+	// The point inside of the bounding box used to take co-ordinates. By default the lower left corner.
+	public float xOrig = 0;
+	public float yOrig = 0;
 	
-	// By default the x, y co-ordinates of a BoundedElement,s origin are at the center of its bounding box.
+	// Constructs a BoundedElement with no size or location.
+	public BoundedElement() {
+		bounds = new Rectangle(0, 0, 0, 0);
+	}
+	
+	// Builds a Bounded element at point x, y with the given width and height.
 	public BoundedElement(float x, float y, float width, float height) {
 		bounds = new Rectangle(x, y, width, height);
-		xOrig = width / 2;
-		yOrig = height / 2;
 	}
 	
 	// Sets the x co-ordinate for the BoundedElement.
