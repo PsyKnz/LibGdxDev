@@ -1,7 +1,5 @@
 package psyknz.libgdx.games;
 
-import psyknz.libgdx.games.robotjrpg.*;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -55,7 +53,7 @@ public class LoadingScreen extends GameScreen {
 			if(progress < 100) {
 				game.assets.update();
 			}
-			else setScreen(new BattleScreen(game));
+			else setScreen(new psyknz.libgdx.games.magnetris.PlayScreen(game));
 		}
 		
 		/* Draws a progress metre for the AssetManager. Assumes all assets required to draw the metre have
