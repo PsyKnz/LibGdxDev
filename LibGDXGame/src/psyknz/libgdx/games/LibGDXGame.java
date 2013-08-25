@@ -10,8 +10,8 @@ import com.badlogic.gdx.assets.AssetManager;
 public class LibGDXGame extends Game {
  
 	// Width and height of the game screen in in-game units.
-	public final int width = 450;
-	public final int height = 800;
+	public final int width = 800;
+	public final int height = 450;
 	
 	// Core AssetManager for the game.
 	public AssetManager assets;

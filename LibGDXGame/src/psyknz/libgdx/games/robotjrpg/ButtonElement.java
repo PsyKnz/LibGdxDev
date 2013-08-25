@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class ButtonElement extends BoundedElement {
-		// Reference to the ElementListener this ButtonElement reports to.
+
+	// Reference to the ElementListener this ButtonElement reports to.
 	private ElementListener listener;
 	
 	// The Sprite being used to draw this button and the decal yo draw over it.

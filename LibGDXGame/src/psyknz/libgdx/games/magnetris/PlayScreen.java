@@ -10,6 +10,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class PlayScreen extends GameScreen implements GameElement {
     
+	// Constant which effects the magnitude of effect distance from a magnet has on an OrbElement.
+	public static final float MAGNET_CONSTANT = 1;
+	
 	// Reference to the CircleElement which all of the OrbElements are attracted to.
 	private Array<CircleElement> magnets;
 	
@@ -52,7 +55,7 @@ public class PlayScreen extends GameScreen implements GameElement {
 		elements.addAll(magnets);
 		
 		// Creates the orbController which keeps track of everything to do with the orbs on screen.
-		orbController = new OrbController(this, 18);
+		orbController = new OrbController(this);
 		elements.add(orbController);
 	}
 	
@@ -68,7 +71,7 @@ public class PlayScreen extends GameScreen implements GameElement {
 	@Override
 	public void dispose() {}
 	
-	// Returns the Array of on-screen magnets.
+	// Returns a reference to the Array of on-screen magnets.
 	public Array<CircleElement> getMagnets() {
 		return magnets;
 	}

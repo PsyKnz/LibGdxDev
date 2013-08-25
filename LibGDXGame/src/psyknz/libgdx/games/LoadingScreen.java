@@ -53,7 +53,7 @@ public class LoadingScreen extends GameScreen {
 			if(progress < 100) {
 				game.assets.update();
 			}
-			else setScreen(new psyknz.libgdx.games.magnetris.PlayScreen(game));
+			else setScreen(new psyknz.libgdx.games.TestScreen(game));
 		}
 		
 		/* Draws a progress metre for the AssetManager. Assumes all assets required to draw the metre have

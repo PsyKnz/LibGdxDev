@@ -10,66 +10,57 @@ public class OrbElement extends CircleElement {
 	public static final float ORB_SIZE = 64;
 	
 	// The distance an orb should be able to cover in a straight line in 1 second given a speed of 1.
-	public static final float BASE_SPEED = 225;
+	public static final float MAX_SPEED = (float) Math.pow(ORB_SIZE, 2);
 	
 	// Constants used to determine the current state of the orb.
 	public static final int SELECTED = 0;
 	public static final int STATIONARY = 1;
-	public static final int ATTACHED = 2;
-	public static final int MOTION = 3;
+	public static final int MOTION = 2;
 	
 	// The current state of the OrbElement.
 	private int state = STATIONARY;
 	
-	/* Relative distances the orb needs to travel along the x and y axis while in motion and the speed it should travel at to reach that
-	 *  spot. Speed represents how many seconds it should take to close that distance. */
-	private float xMove, yMove, speed, angle;
+	// Vector2 used to track the motion of the OrbElement.
+	private Vector2 motion;
 	
-	// Reference to the OrbElement this OrbElement is attached to (if attached).
-	private OrbElement parent, child;
+	// The OrbElement this OrbElement will follow once selected.
+	private OrbElement parentOrb;
 	
+	// Constructs a new OrbElement of the given color.
 	public OrbElement(Sprite sprite, Color color) {
 		super(sprite, color, ORB_SIZE);
+		
+		// Initialises the motion vector to stationary and clamps it to the MAX_SPEED.
+		motion = new Vector2(0, 0);
+		motion.clamp(0, MAX_SPEED);
 	}
 	
-	// Updates the game logic for the OrbElement based on its current state.
+	// Updates the game logic for the OrbElement considering its state.
 	@Override
 	public void update(float delta) {
-		switch(state) {
-			
-		/* If the OrbElement is selected or stationary it does nothing. (In the event it is selected its motion will be managed by the
-		 *  OrbController). */
-		case SELECTED:
-		case STATIONARY:
-			break;
-			
-		// If the OrbElement is attached or in motion then it moves according to its xMove and yMove.
-		case ATTACHED:
-		case MOTION:
-			bounds.x += xMove * speed * delta;
-			bounds.y += yMove * speed * delta;
-			break;
+		if(state == MOTION) {
+			bounds.x += motion.x * delta;
+			bounds.y += motion.y * delta;
 		}
 	}
 	
-	// Sets the xMove and yMove values so that the OrbElement will move towards the given x, y co-ordinates.
-	public void setMotion(float x, float y) {
-		xMove = x - getX();
-		yMove = y - getY();
-		speed = 1;
-		state = MOTION;
+	// Sets the OrbElement to selected, registers its parent, and itself to the selected array.
+	public void setSelected(OrbElement parentOrb) {
+		this.parentOrb = parentOrb;
+		state = SELECTED;
 	}
 	
-	// Attaches this OrbElement to the parent OrbElement passed as an argument and registers itself as its child.
-	public void setAttached(OrbElement parent) {
-		
-		// Deregisters itself from its previous parent provided it is still its child.
-		if(parent != null && parent.child == this) parent.child = null;
-		
-		// Registers its parent and itself as a child.
-		this.parent = parent;
-		parent.child = this;
-		state = ATTACHED;
+	// Sets the OrbElement to STATIONARY and fits it into the given co-ordinates.
+	public void setStationary(float x, float y) {
+		setX(x);
+		setY(y);
+		state = STATIONARY;
+	}
+	
+	// Applies motion to the OrbElement along a given vector.
+	public void setMotion(Vector2 force) {
+		motion.add(force);
+		state = MOTION;
 	}
 	
 	// Returns the OrbElement's current state.
