@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 public class PlayScreen extends GameScreen implements GameElement {
     
 	// Constant which effects the magnitude of effect distance from a magnet has on an OrbElement.
-	public static final float MAGNET_CONSTANT = 1;
+	public static final float MAGNET_CONSTANT = OrbElement.ORB_SIZE / 2;
 	
 	// Reference to the CircleElement which all of the OrbElements are attracted to.
 	private Array<CircleElement> magnets;
@@ -22,14 +22,9 @@ public class PlayScreen extends GameScreen implements GameElement {
 	/* Reference to the OrbController which manages all on-screen OrbElements as well as the size they should be and their spacing aong
 	 *  the y-axis. */
 	private OrbController orbController;
-	public final int orbSize = 64;
-	public final int ySpacing;
 	
 	public PlayScreen(LibGDXGame game) {
 		super(game);
-		
-		// Determines how far apart stationary OrbElements need to be on the y axis given their size.
-		ySpacing = (int) Math.ceil(Math.sqrt(Math.pow(orbSize, 2) - Math.pow(orbSize / 2, 2)));
 		
 		// Adds the screen to the GameElement list.
 		elements.add(this);
@@ -47,7 +42,7 @@ public class PlayScreen extends GameScreen implements GameElement {
 		magnets = new Array<CircleElement>();
 		
 		// Generates all of the magnets which are on screen.
-		magnets.add(new CircleElement(circle, Color.DARK_GRAY, orbSize));
+		magnets.add(new CircleElement(circle, Color.DARK_GRAY, OrbElement.ORB_SIZE));
 		magnets.get(0).setX(game.width / 2);
 		magnets.get(0).setY(game.height / 2);
 		

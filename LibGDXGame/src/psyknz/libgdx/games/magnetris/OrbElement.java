@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class OrbElement extends CircleElement {
 	
 	// The size all orbs should be drawn at.
-	public static final float ORB_SIZE = 64;
+	public static final float ORB_SIZE = 48;
 	
 	// The distance an orb should be able to cover in a straight line in 1 second given a speed of 1.
 	public static final float MAX_SPEED = (float) Math.pow(ORB_SIZE, 2);
@@ -16,6 +16,7 @@ public class OrbElement extends CircleElement {
 	public static final int SELECTED = 0;
 	public static final int STATIONARY = 1;
 	public static final int MOTION = 2;
+	public static final int MAGNET = 3;
 	
 	// The current state of the OrbElement.
 	private int state = STATIONARY;
@@ -51,9 +52,9 @@ public class OrbElement extends CircleElement {
 	}
 	
 	// Sets the OrbElement to STATIONARY and fits it into the given co-ordinates.
-	public void setStationary(float x, float y) {
-		setX(x);
-		setY(y);
+	public void setStationary(Vector2 pos) {
+		setX(pos.x);
+		setY(pos.y);
 		state = STATIONARY;
 	}
 	

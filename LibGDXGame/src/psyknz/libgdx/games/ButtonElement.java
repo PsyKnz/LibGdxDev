@@ -1,4 +1,4 @@
-package psyknz.libgdx.games.robotjrpg;
+package psyknz.libgdx.games;
 
 import psyknz.libgdx.games.*;
 

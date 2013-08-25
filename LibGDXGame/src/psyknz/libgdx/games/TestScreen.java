@@ -1,7 +1,5 @@
 package psyknz.libgdx.games;
 
-import psyknz.libgdx.games.robotjrpg.ButtonElement;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -21,6 +19,9 @@ public class TestScreen extends GameScreen implements ElementListener {
 	// Builds a simple screen with buttons for loading other screens currently in testing.
 	public TestScreen(LibGDXGame game) {
 		super(game);
+		
+		// Creates the ButtonElement Array
+		buttons = new Array<ButtonElement>();
 		
 		// Sets up the resources used to construct the ButtonElements.
 		Sprite sprite = new Sprite((Texture) game.assets.get("data/ShapeImageTemplate.png"), 0, 64, 64, 64);

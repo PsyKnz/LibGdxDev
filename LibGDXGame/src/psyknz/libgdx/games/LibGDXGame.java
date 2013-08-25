@@ -10,8 +10,7 @@ import com.badlogic.gdx.assets.AssetManager;
 public class LibGDXGame extends Game {
  
 	// Width and height of the game screen in in-game units.
-	public final int width = 800;
-	public final int height = 450;
+	public final int width = 800, height = 450;
 	
 	// Core AssetManager for the game.
 	public AssetManager assets;
@@ -23,6 +22,7 @@ public class LibGDXGame extends Game {
 	public void create() {
 		assets = new AssetManager();
 		
+		// Creates the console, used for debugging during runtime.
 		console = new ConsoleElement(this);
 		
 		// Loads the first screen to use in the game, the LoadingScreen.
