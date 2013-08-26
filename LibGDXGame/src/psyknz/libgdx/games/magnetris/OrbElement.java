@@ -10,16 +10,18 @@ public class OrbElement extends CircleElement {
 	public static final float ORB_SIZE = 48;
 	
 	// The distance an orb should be able to cover in a straight line in 1 second given a speed of 1.
-	public static final float MAX_SPEED = (float) Math.pow(ORB_SIZE, 2);
+	public static final float MAX_SPEED = ORB_SIZE;
 	
 	// Constants used to determine the current state of the orb.
 	public static final int SELECTED = 0;
 	public static final int STATIONARY = 1;
 	public static final int MOTION = 2;
-	public static final int MAGNET = 3;
 	
 	// The current state of the OrbElement.
 	private int state = STATIONARY;
+	
+	// Determines whether this OrbElement applies a force to other OrbElements.
+	public boolean magnetic;
 	
 	// Vector2 used to track the motion of the OrbElement.
 	private Vector2 motion;
@@ -33,7 +35,6 @@ public class OrbElement extends CircleElement {
 		
 		// Initialises the motion vector to stationary and clamps it to the MAX_SPEED.
 		motion = new Vector2(0, 0);
-		motion.clamp(0, MAX_SPEED);
 	}
 	
 	// Updates the game logic for the OrbElement considering its state.
@@ -52,15 +53,16 @@ public class OrbElement extends CircleElement {
 	}
 	
 	// Sets the OrbElement to STATIONARY and fits it into the given co-ordinates.
-	public void setStationary(Vector2 pos) {
-		setX(pos.x);
-		setY(pos.y);
+	public void setStationary(float x, float y) {
+		setX(x);
+		setY(y);
 		state = STATIONARY;
 	}
 	
 	// Applies motion to the OrbElement along a given vector.
 	public void setMotion(Vector2 force) {
 		motion.add(force);
+		motion.limit(MAX_SPEED);
 		state = MOTION;
 	}
 	

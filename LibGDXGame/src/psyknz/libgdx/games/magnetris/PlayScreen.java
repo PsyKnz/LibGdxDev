@@ -9,12 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayScreen extends GameScreen implements GameElement {
-    
-	// Constant which effects the magnitude of effect distance from a magnet has on an OrbElement.
-	public static final float MAGNET_CONSTANT = OrbElement.ORB_SIZE / 2;
-	
-	// Reference to the CircleElement which all of the OrbElements are attracted to.
-	private Array<CircleElement> magnets;
 	
 	// Reference to the CircleElement which all of the OrbElements needs to remain within 
 	public CircleElement arena;
@@ -38,19 +32,8 @@ public class PlayScreen extends GameScreen implements GameElement {
 		arena.setY(game.height / 2);
 		elements.add(arena);
 		
-		// Creates the magnets Array which will hold all of the onscreen magnets that draw OrbElements in motion to them.
-		magnets = new Array<CircleElement>();
-		
-		// Generates all of the magnets which are on screen.
-		magnets.add(new CircleElement(circle, Color.DARK_GRAY, OrbElement.ORB_SIZE));
-		magnets.get(0).setX(game.width / 2);
-		magnets.get(0).setY(game.height / 2);
-		
-		// Adds all of the magnets to the list of GameElements
-		elements.addAll(magnets);
-		
 		// Creates the orbController which keeps track of everything to do with the orbs on screen.
-		orbController = new OrbController(this);
+		orbController = new OrbController(this, new float[] {game.width / 2, game.height / 2});
 		elements.add(orbController);
 	}
 	
@@ -65,9 +48,4 @@ public class PlayScreen extends GameScreen implements GameElement {
 	// Disposes of all resources loaded by this screen that require disposing of.
 	@Override
 	public void dispose() {}
-	
-	// Returns a reference to the Array of on-screen magnets.
-	public Array<CircleElement> getMagnets() {
-		return magnets;
-	}
 }
