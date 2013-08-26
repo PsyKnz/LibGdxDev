@@ -43,13 +43,13 @@ public class CircleElement extends BoundedElement {
 	
 	// Returns whether the given CircleElement is fully contained within this CircleElement.
 	public boolean contains(CircleElement circle) {
-		if(Math.pow(circle.getX() - getX(), 2) + Math.pow(circle.getY() - getY(), 2) < Math.pow(xOrig, 2) - Math.pow(circle.xOrig, 2)) return true;
+		if(Math.pow(circle.getX() - getX(), 2) + Math.pow(circle.getY() - getY(), 2) < Math.pow(circle.xOrig - xOrig, 2)) return true;
 		return false;
 	}
 	
 	// Returns whether the two CircleElements overlap.
 	public boolean overlaps(CircleElement circle) {
-		if(Math.pow(circle.getX() - getX(), 2) + Math.pow(circle.getY() - getY(), 2) < Math.pow(xOrig, 2) + Math.pow(circle.xOrig, 2)) return true;
+		if(Math.pow(circle.getX() - getX(), 2) + Math.pow(circle.getY() - getY(), 2) < Math.pow(circle.xOrig + xOrig, 2)) return true;
 		return false;
 	}
 }

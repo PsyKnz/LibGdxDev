@@ -25,6 +25,7 @@ public class LoadingScreen extends GameScreen implements GameElement {
 				
 		// Queues up all other assets to load here.
 		game.assets.load("data/ShapeImageTemplate.png", Texture.class);
+		game.assets.load("data/Shapes.png", Texture.class);
 				
 		// Adds all elements which are part of the loading screen here.
 		elements.add(this);

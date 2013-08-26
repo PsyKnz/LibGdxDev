@@ -47,7 +47,7 @@ public class OrbController implements GameElement {
 		selectedOrbs = new Array<OrbElement>();
 		
 		// Loads the sprite used to draw the orbs.
-		orbSprite = new Sprite((Texture) screen.getGame().assets.get("data/ShapeImageTemplate.png"), 0, 0, 64, 64);
+		orbSprite = new Sprite((Texture) screen.getGame().assets.get("data/Shapes.png"), 0, 0, 64, 64);
 		
 		// Provided there are enough co-ordinates for at least 1 magnet they are placed.
 		if(magnetXY.length > 1) for(int i = 0; i < magnetXY.length; i += 2) {
