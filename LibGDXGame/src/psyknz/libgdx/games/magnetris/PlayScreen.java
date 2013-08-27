@@ -24,7 +24,7 @@ public class PlayScreen extends GameScreen implements GameElement {
 		elements.add(this);
 		
 		// Loads the resources that are used by this screen.
-		Sprite circle = new Sprite((Texture) game.assets.get("data/ShapeImageTemplate.png"), 0, 0, 64, 64);
+		Sprite circle = new Sprite((Texture) game.assets.get("data/Shapes.png"), 0, 0, 64, 64);
 		
 		// Creates the arena, which all stationary OrbElements must remain within.
 		arena = new CircleElement(circle, Color.WHITE, 386);
