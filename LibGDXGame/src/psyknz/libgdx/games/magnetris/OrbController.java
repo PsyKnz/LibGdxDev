@@ -79,16 +79,33 @@ public class OrbController implements GameElement {
 			spawnTimer += spawnRate;
 		}
 		
+		// Checks to see if the player is touching the screen.
+		if(screen.isTouched()) {
+			
+			// If they are and there are currently no selected orbs then the OrbElement they are touching starts the chain of selectedOrbs.
+			if(selectedOrbs.size == 0) for(int i = 0; i < orbs.size; i++) {
+				if(orbs.get(i).contains(screen.touchX(), screen.touchY())) {
+					orbs.get(i).setSelected(null);
+					selectedOrbs.add(orbs.get(i));
+					screen.touchElement.maxLength += OrbElement.ORB_SIZE;
+					break;
+				}
+			}
+			
+			// If the player is touching the screen then all selectedOrbs are placed along the touchHistory.
+			if(selectedOrbs.size > 0) for(int i = 0; i < selectedOrbs.size; i++) {
+				currentForce = screen.touchElement.getPoint(i * OrbElement.ORB_SIZE);
+			}
+		}
+		
+		// If the screen isn't currently touched but there are selected OrbElements they are destroyed and scored.
+		else if(selectedOrbs.size > 0) {}
+		
 		// Updates the game logic for all of the on-screen OrbElements.
 		for(int i = 0; i < orbs.size; i++) {
 			currentOrb = orbs.get(i);
 			currentOrb.update(delta);
 			if(currentOrb.getState() == OrbElement.MOTION) applyForce(currentOrb);
-		}
-		
-		// Positions all selected OrbElements along the path of the finger.
-		for(int i = 0; i < selectedOrbs.size; i++) {
-			
 		}
 		
 		// Tests for collisions between all OrbElements (including testing against the magnets).

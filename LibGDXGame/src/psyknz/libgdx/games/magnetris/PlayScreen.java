@@ -30,7 +30,7 @@ public class PlayScreen extends GameScreen implements GameElement {
 		Sprite dot = new Sprite((Texture) game.assets.get("data/Shapes.png"), 32, 32, 1, 1);
 		
 		// Creates the arena, which all stationary OrbElements must remain within.
-		arena = new CircleElement(circle, Color.WHITE, game.height - OrbElement.ORB_SIZE);
+		arena = new CircleElement(circle, Color.GRAY, game.height - OrbElement.ORB_SIZE);
 		arena.setX(game.width / 2);
 		arena.setY(game.height / 2);
 		elements.add(arena);
@@ -41,8 +41,8 @@ public class PlayScreen extends GameScreen implements GameElement {
 		
 		// Creates the TouchElement for finger tracking and adds it to the screens GameElement Array.
 		touchElement = new TouchElement(this);
-		touchElement.touchPoint = dot;
-		touchElement.setMaxLength(256);
+		touchElement.sprite = dot;
+		touchElement.maxLength = 256;
 		touchElement.visible = true;
 		elements.add(touchElement);
 		
@@ -60,6 +60,7 @@ public class PlayScreen extends GameScreen implements GameElement {
 	@Override
 	public void draw(SpriteBatch batch) {
 		font.draw(batch, "touchX: " + touchX() + ", touchY: " + touchY(), 0, game.height);
+		font.draw(batch, "maxLength: " + touchElement.maxLength + ", currentLength: " + touchElement.getLength(), 0, game.height - 32);
 	}
 	
 	// Disposes of all resources loaded by this screen that require disposing of.

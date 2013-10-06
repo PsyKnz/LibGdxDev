@@ -19,18 +19,20 @@ public class TouchElement implements GameElement {
 	public final Pool<Vector2> touchPool;
 	
 	// The maximum length the touchHistory can be in pixels.
-	private float currentLength, maxLength = 0;
+	private float currentLength;
+	public float maxLength = 0;
 	
 	// The minimum distance the finger has to move from the 2nd touch Vector2 for it to be recorded into the touchHistory.
 	public float touchThreshold = 4;
 	
 	// Sprite used to draw the touchHistory to the screen provided that it is currently set to visible. (By default not visible).
 	public boolean visible = false;
-	public Sprite touchPoint = null;
-	public Color touchColor = Color.YELLOW;
+	public Sprite sprite = null;
+	public Color color = Color.YELLOW;
 	
 	// Variables used during line drawing.
-	private float startX, startY, endX, endY, gradient;
+	private Vector2 start, end, point;
+	private float gradient;
 	
 	// Constructs a new TouchElement which maintains a record of user touch input for a single finger.
 	public TouchElement(GameScreen screen) {
@@ -41,9 +43,12 @@ public class TouchElement implements GameElement {
 		touchPool = new Pool<Vector2>() {
 			@Override
 			protected Vector2 newObject() {
-				return new Vector2(0, 0);
+				return new Vector2(Vector2.Zero);
 			}
 		};
+		
+		// Sets up the point vector used for finding specific points in the touchHistory.
+		point = touchPool.obtain();
 	}
 	
 	@Override
@@ -73,31 +78,24 @@ public class TouchElement implements GameElement {
 		}
 		
 		// If the screen is currently not touched but there is a history of screen touches the history is cleared.
-		else if(touchHistory.size > 0) touchPool.freeAll(touchHistory);
+		else if(touchHistory.size > 0) {
+			touchPool.freeAll(touchHistory);
+			touchHistory.clear();
+		}
 	}
 	
 	@Override
 	public void draw(SpriteBatch batch) {
 		
 		// Draws the touchHistory to screen Provided the TouchElement is visible and has a sprite available to use.
-		if(visible && touchPoint != null) {
-			touchPoint.setColor(touchColor);
+		if(visible && sprite != null) {
+			sprite.setColor(color);
 			
 			// Provided there are two or more points recorded in touchHistory they are all connected together on screen.
 			if(touchHistory.size > 1) for(int i = 1; i < touchHistory.size; i++) {
 				drawLine(batch, touchHistory.get(i - 1), touchHistory.get(i));
 			}
 		}
-	}
-	
-	// Sets the maximum length in pixels the touchHistory can be.
-	public void setMaxLength(float maxLength) {
-		this.maxLength = maxLength;
-	}
-	
-	// Returns the maximum length in pixels the touchHistory can be.
-	public float getMaxLength() {
-		return maxLength;
 	}
 	
 	// Finds and returns the current length of the touchHistory in pixels.
@@ -121,42 +119,69 @@ public class TouchElement implements GameElement {
 	// Draws a line between v1 and v2 using a 1x1 sized sprite.
 	private void drawLine(SpriteBatch batch, Vector2 v1, Vector2 v2) {
 		
-		// Finds the starting and ending x, y co-ordinates for the line. 
-		if(v1.x < v2.x) {
-			startX = v1.x; 
-			endX = v2.x;
-		}
-		else {
-			startX = v2.x;
-			endX = v1.x;
-		}
-		if(v1.y < v2.y) {
-			startY = v1.y;
-			endY = v2.y;
-		}
-		else {
-			startY = v2.y;
-			endY = v1.y;
-		}
-		
-		// Determines the gradient of the line.
-		gradient = (v1.y - v2.y) / (v1.x - v2.x);
-		
-		// If the line has a gradient of less than 1 then the x values are used for point drawing.
-		if(gradient < 1) {
-			for(float x = 0; x < endX - startX; x++) {
-				touchPoint.setBounds(x + startX, x * gradient + startY, 1, 1);
-				touchPoint.draw(batch);
+		// The axis which needs to be scanned along is determined.
+		if(Math.abs(v1.x - v2.x) > Math.abs(v1.y - v2.y)) {
+			
+			// Determines all start and end co-ordinates.
+			if(v1.x < v2.x) {
+				start = v1;
+				end = v2;
+			}
+			else {
+				start = v2;
+				end = v1;
+			}
+			
+			// Finds the gradient of the line to be drawn.
+			gradient = (start.y - end.y) / (start.x - end.x);
+			
+			// Scans through the x axis drawing points.
+			for(int x = 0; x < end.x - start.x; x++) {
+				sprite.setPosition(x + start.x, x * gradient + start.y);
+				sprite.draw(batch);
 			}
 		}
 		
-		// If the line has a gradient of more than 1 then the y values are used for point drawing.
+		// Same process as above but for scanning along the y axis.
 		else {
-			for(float y = 0; y < endY - startY; y++) {
-				touchPoint.setBounds(y / gradient + startX, y = startY, 1, 1);
-				touchPoint.draw(batch);
+			if(v1.y < v2.y) {
+				start = v1;
+				end = v2;
+			}
+			else {
+				start = v2;
+				end = v1;
+			}
+			
+			gradient = (start.x - end.x) / (start.y - end.y);
+			
+			for(int y = 0; y < end.y - start.y; y++) {
+				sprite.setPosition(y * gradient + start.x, y + start.y);
+				sprite.draw(batch);
 			}
 		}
+	}
+	
+	// Returns the co-ordinates for a specific point in the touchHistory.
+	public Vector2 getPoint(float length) {
 		
+		// If there is no touchHistory then a zero vector is returned.
+		if(touchHistory.size <= 0) point.set(Vector2.Zero);
+		
+		// If there is only 1 point in the touchHistory then its co-ordinates are returned.
+		else if(touchHistory.size <= 1) point.set(touchHistory.get(0));
+		
+		// Otherwise the closest co-ordinate in the history is returned.
+		else {
+			float testLength = 0;
+			int index = 0;
+			while(testLength < length) {
+				index++;
+				testLength += touchHistory.get(index).dst(touchHistory.get(index - 1));
+			}
+			point = touchHistory.get(index).sub(touchHistory.get(index - 1));
+			point.limit(testLength - length);
+		}
+		return point;
 	}
 }

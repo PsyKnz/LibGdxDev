@@ -26,8 +26,9 @@ public class OrbElement extends CircleElement {
 	// Vector2 used to track the motion of the OrbElement.
 	private Vector2 motion;
 	
-	// The OrbElement this OrbElement will follow once selected.
+	// The OrbElement this OrbElement has to wait to touch before it connects to the chain of selected orbs..
 	private OrbElement parentOrb;
+	public boolean parentCollided;
 	
 	// Constructs a new OrbElement of the given color.
 	public OrbElement(Sprite sprite, Color color) {
@@ -40,6 +41,8 @@ public class OrbElement extends CircleElement {
 	// Updates the game logic for the OrbElement considering its state.
 	@Override
 	public void update(float delta) {
+		
+		// If the OrbElement is in MOTION it moves according to its motion vector.
 		if(state == MOTION) {
 			bounds.x += motion.x * delta;
 			bounds.y += motion.y * delta;
@@ -49,6 +52,7 @@ public class OrbElement extends CircleElement {
 	// Sets the OrbElement to selected, registers its parent, and itself to the selected array.
 	public void setSelected(OrbElement parentOrb) {
 		this.parentOrb = parentOrb;
+		parentCollided = false;
 		state = SELECTED;
 	}
 	
